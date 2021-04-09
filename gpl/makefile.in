@@ -1,0 +1,91 @@
+# Makefile for GPL components 
+# 
+# (C) 2007, Politecnico di Milano and V. Zaccaria
+
+DSTDIR = @dstdir@
+SRCDIR = @gplsrcdir@
+INCDIR = @gplsrcdir@
+
+CXXFLAGS = @othergplcxxflags@
+LINKFLAGS = @othergpllinkflags@
+IMAGE = @image@
+STATIC = @static@
+
+CXX=g++
+MPICXX=mpic++
+AR=ar cr
+RANLIB=ranlib
+SHLIB_LD=g++ -fPIC
+
+OS_NAME = $(shell uname -s)
+
+CXXFLAGS   += -I$(INCDIR)  
+CXXSOFLAGS  = -g -shared -fPIC 
+LINKFLAGS  += 
+
+#####################################
+#     CREATE SYMBOLIC TARGETS       #
+#####################################
+
+
+GPL_TARGETS = gpl_xdr_api.o 
+
+GPL_INCLUDES = gpl_xdr_api.h
+
+GPL_INCDIR_INCLUDES = $(patsubst %.h, $(INCDIR)/%.h, $(GPL_INCLUDES))
+
+# Tells make to search for sources into SRCDIR, SRCDIR/optimizers and SRCDIR/drivers
+VPATH=$(SRCDIR)
+
+
+#####################################
+#     CREATE BUILD TARGETS          #
+#####################################
+
+all: regressor normal rand sh_i
+
+#############################
+#       ENGINE BUILD	    #
+#############################
+
+normal: $(GPL_TARGETS) normal.o
+	$(CXX) $(STATIC) $^ -o $@ $(LINKFLAGS)
+
+rand: $(GPL_TARGETS) rand.o
+	$(CXX) $(STATIC) $^ -o $@ $(LINKFLAGS)
+
+regressor: $(GPL_TARGETS) regressor.o
+	$(CXX) $(STATIC) $^ -o $@ $(LINKFLAGS)
+
+sh_i: $(GPL_TARGETS) sh_i.o
+	$(CXX) $(STATIC) $^ -o $@ $(LINKFLAGS)
+
+%.o: %.cc $(GPL_INCDIR_INCLUDES)
+	$(CXX) -c  $< -o $@ $(CXXFLAGS) 
+
+%.so: %.cc $(GPL_INCDIR_INCLUDES)
+	$(CXX) $< -o $@ $(CXXSOFLAGS) $(CXXFLAGS) $(LINKFLAGS)
+
+#############################
+#       CLEAN BUILD	    #
+#############################
+
+clean:
+	rm -f *.o regressor normal *.cc *.h *.so rand sh_i
+
+#############################
+#      INSTALL BUILD	    #
+#############################
+
+BINR=555
+OTHR=444
+
+install: all 
+	@mkdir -p $(IMAGE)
+	@mkdir -p $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/regressor $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/normal $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/rand $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/sh_i $(IMAGE)/gpl
+
+

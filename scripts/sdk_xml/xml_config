@@ -1,0 +1,55 @@
+#!/bin/sh
+
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+
+progname=$0
+progname="$progname.x"
+
+
+# ==================================
+# Process the command line arguments
+# ==================================
+
+all_arg=$*
+args=
+
+while :
+do
+# no args
+        case $# in
+	0)
+		break
+		;;
+	esac
+
+# get first arg and shuffle
+	option=$1
+	shift
+
+# make all options have two hyphens
+	orig_option=$option
+	case $option in
+		--*) ;;
+		-*) option=-$option ;;
+	esac
+
+# split the option to get its argument
+	case $option in
+	--*=*)
+		optarg=`echo $option | sed -e 's/^[^=]*=//'`
+		;;
+	esac
+
+# process the options
+	case $option in
+
+	    --cflags)   echo "-I$srcdir";;
+	    --libs)     echo "-L$srcdir -lxml_m3";;
+	    --wrap=*)   cp $srcdir/xml_wrapper $optarg
+	    		cp $srcdir/xml_stub.py .;;
+	esac
+done
+
+
+

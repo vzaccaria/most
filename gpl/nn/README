@@ -1,0 +1,5 @@
+Implementa una rete ANN con topologia n-hidden layers da 1 neurone. 
+L'implementazione è basata su LIBFANN libreria di ANN open source.
+xcompilare:
+gcc cascade.c -o cascade -lm -lpthread -lfann
+

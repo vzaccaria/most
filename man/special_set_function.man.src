@@ -1,0 +1,22 @@
+.SH NAME
+set_function
+.SH SYNOPSYS
+\fBset_function fn_name(par1, ..., parn) = expr(par1, ..., parn)\fP
+.SH DESCRIPTION
+
+This command creates a new function which can be invoked in a script to factor out and perform repetitive computations. Bear in mind that for complex algorithms you may use the set_procedure command.
+
+.SH EXAMPLES
+The following commands defines a function:
+
+\f(CRset_function frame_s(x) = ($nframe*$frequency_Hz)/(metrics($x)@1)\fP
+
+You may use the previous function to create a constraint for the optimization process:
+
+\f(CRset_constraint frame_rate(x) = frame_s($x)/25 > 1\fP
+
+.SH SEE ALSO
+\fBset\fP
+
+.SH RETURN VALUE
+The return variable $? is set to the value of true on success, false otherwise. 

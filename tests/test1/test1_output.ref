@@ -1,0 +1,11 @@
+Information: Current optimizer has been set to 'Parallel Pareto DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Full search DoE'
+Information: Assigned value [ "1", "8" ] to ics
+Information: Assigned value [ "8", "256" ] to ibs
+Information: Assigned value [ "1", "16" ] to iw
+Information: Assigned value 200.000000 to max_total_area
+Information: Assigned value 50.000000 to min_total_area
+Information: Assigned value "full_solution.db" to visited_solution
+Information: Assigned value "total_energy" to metric1
+Information: Assigned value "total_delay" to metric2
+Information: Exiting from MOST shell

@@ -1,0 +1,19 @@
+#!/bin/sh
+date=`date +"%B %e, %Y"`
+cd @bdir@/examples/ro_sesc && bunzip2 fullSESC_RO.db.bz2
+@bdir@/bin/most -f @bdir@/validation/mosa_validation.scr -p -T | tee mosa_log.txt
+@bdir@/bin/most -f @bdir@/validation/nsgaii_validation.scr -p -T | tee nsgaii_log.txt
+@bdir@/bin/most -f @bdir@/validation/respir_validation.scr -p -T | tee respir_log.txt
+pstopdf mosa-ADRS-nsims.ps
+pstopdf nsgaii-ADRS-nsims.ps
+pstopdf respir-ADRS-nsims.ps
+# echo "[MOST] Validation of optimizers started in $date" | mutt -s "[MOST] Validation of optimizers started in $date" -a mosa-ADRS-nsims.pdf -a nsgaii-ADRS-nsims.pdf -a respir-ADRS-nsims.pdf zaccaria@elet.polimi.it gpalermo@elet.polimi.it castro.fabrizio@gmail.com
+
+# curd=`date +"%F_%H-%M-%S"`
+# svn co https://svn.ws.dei.polimi.it/multicube/trunk/validation/most/optimizers
+# mkdir optimizers/$curd
+# mkdir optimizers/$curd/objects
+# mkdir optimizers/$curd/pdfs
+# cp *-ADRS-nsims.pdf optimizers/$curd/pdfs
+# cp *obj.db optimizers/$curd/objects
+# cd optimizers && svn add $curd && svn commit -m "Added $curd optimizers result files"

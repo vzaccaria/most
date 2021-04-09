@@ -1,0 +1,24 @@
+.TH set_objective 1 " MOST Shell - December 27, 2010"
+.SH NAME
+set_objective \- Sets a minimization objective
+.SH SYNOPSYS
+\fBset_objective\fP \fIobjective_name(point)\fP = \fIexpr($point)\fP
+.SH DESCRIPTION
+This command sets a minimization objective for the optimization problem. The objective is a function of the current \fI(point)\fP instantiated during the optimization phase. Multiple objectives can be defined at the same time to construct a multiple-objective optimization problem.
+
+The expression associated to the objective can be directly related to the actual values of the parameters of the point (or \fIlevels\fP):
+
+\f(CRset_objective my_obj(x) = get_level($x, 2)\fP
+
+or
+
+\f(CRset_objective my_obj(x) = second_parameter_name($x)\fP
+
+The objective can be also derived from the actual values of the metrics estimated by the simulator for the specific point under consideration. The function \f(CRmetrics\fP can be used to derive an array of the metric associated to the point, to build a complex objective:
+
+\f(CRset_objective my_obj(x) = metrics($x)@2\fP
+
+.SH "SEE ALSO"
+\fBopt_remove_objective\fP, \fBopt_tune\fP, \fBset_constraint\fP, \fBset_function\fP, \fBset_metric\fP
+.SH "RETURN VALUE"
+The return variable $? is set to the value of true on sucess, false otherwise.

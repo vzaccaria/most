@@ -1,0 +1,37 @@
+Information: Creating the xml_driver
+Information: Loading the xml_driver
+Information: Assigned value [ "1", "2" ] to partest_1_bounds
+Information: Assigned value [ "1", "5" ] to partest_2_bounds
+Information: Assigned value [ "1", "2" ] to partest_3_bounds
+Information: Assigned value [ "value1", "value2" ] to foo3_bounds
+Information: Assigned value [ "512", "1024" ] to foo4_bounds
+Information: Assigned value [ "0", "1" ] to foo6_bounds
+Information: Assigned value [ "partest_1", "partest_2", "partest_3", "foo3", "foo4", "foo6", "foo7", "foo8", "foo9", "foo10", "foo11", "foo12" ] to ds_parameters
+Information: Assigned value [ "metric1", "metric2" ] to metrics
+
+Shell variables:
+Name                  Value      
+----------            ------------------------ 
+ds_parameters         [ "partest_1", "partest_2", "partest_3", "foo3", "foo4", "foo6", "foo7", "foo8", "foo9", "foo10", "foo11", "foo12" ]  
+foo3_bounds           [ "value1", "value2" ]  
+foo4_bounds           [ "512", "1024" ]  
+foo6_bounds           [ "0", "1" ]  
+metrics               [ "metric1", "metric2" ]  
+partest_1_bounds      [ "1", "2" ]  
+partest_2_bounds      [ "1", "5" ]  
+partest_3_bounds      [ "1", "2" ]  
+
+Optimization objectives:
+Name                  Expression 
+----------            ------------------------ 
+
+Optimization constraints:
+Name                  Expression 
+----------            ------------------------ 
+
+Databases in memory
+Name                            size       
+--------------------------------------------
+root                            0          
+Information: Removing xml_driver
+Information: Exiting from MOST shell

@@ -1,0 +1,6 @@
+#!/bin/sh
+sed '/STSHELL_LICENSE_START/,/STSHELL_LICENSE_END/d' $1 > $1.temp
+cat ./license.txt $1.temp > $1.temp.lic
+mv $1.temp.lic $1
+rm $1.temp
+

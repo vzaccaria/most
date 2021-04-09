@@ -1,0 +1,69 @@
+#
+set number_of_scenarios = 12
+drv_load_driver "st_sesc"
+
+# FULL SEARCH DB
+set ics_bounds =    	[ "2K", "16K" ]
+set dcs_bounds =    	[ "2K", "16K" ]
+set l2cs_bounds=    	[ "32K", "256K" ]
+set icw_bounds  =    	[ "1w", "8w" ]
+set dcw_bounds  =    	[ "1w", "8w" ]
+set l2cw_bounds  =    	[ "1w", "8w" ]
+set iwidth_bounds=  	[ "1", "8" ]
+set cbs_bounds =   	[ "16B", "32B" ]
+set pn_bounds =    	[ "2", "16" ] 
+
+# During analysis, use the same as the MPEG decoder with max 8 processors 
+
+# Used for MPEG
+# set ics_bounds =    	[ "2K", "16K" ]
+# set dcs_bounds =    	[ "2K", "16K" ]
+# set l2cs_bounds=    	[ "32K", "256K" ]
+# set icw_bounds  =    	[ "1w", "4w" ]
+# set dcw_bounds  =    	[ "2w", "8w" ]
+# set l2cw_bounds  =    [ "2w", "8w" ]
+# set iwidth_bounds=  	[ "1", "8" ]
+# set cbs_bounds =   	[ "16B", "16B" ]
+# set pn_bounds =    	[ "2", "16" ]
+
+
+#set progress=true
+db_read "fullSESC_RO.db" --destination="root"
+#db_read "tst.db"
+db_filter_valid "root"
+
+
+set ins_for_app = [  7507294.000, 1881814.000, 684472.000, 9623162.000, 4203374.000, 2387344.000, 41551696.000, 20484224.000, 10773940.000, 6972904.000, 1591678.000, 576064.000 ]
+
+set_function real_pn(x) = 2*pow(2, pn($x)-level("pn","2"))
+set_function icache_size(x) = 2048*pow(2, ics($x)-level("ics","2K"))
+set_function dcache_size(x) = 2048*pow(2, dcs($x)-level("dcs","2K"))
+set_function l2cache_size(x) = 32768*pow(2, l2cs($x)-level("l2cs","32K"))
+set_function total_cache_size(x) = real_pn($x)*(icache_size($x)+dcache_size($x)+l2cache_size($x))
+
+set frequency_Hz = 1000000000
+set_function time_s(configuration, app) = metrics($configuration)@(2*$app+1)/$frequency_Hz
+set_function mips(configuration, app) = $ins_for_app@$app/1000000/time_s($configuration, $app)
+set_function power_mW(configuration, app) = 1000*metrics($configuration)@(2*$app)/time_s($configuration, $app)
+
+set_objective time_mus(x) = geomavg(i, 0, 11, time_s($x,$i)*1000000)
+set_objective mW_over_mips(x) = geomavg(i, 0, 11, power_mW($x,$i)/mips($x,$i))
+#set_constraint time_mus(x) = geomavg(i, 0, 11, time_s($x,$i)*1000000)/2000 < 1
+set_constraint total_cache_size(x) = (total_cache_size($x)/1100000) < 1
+#set_constraint mw_over_mips(x) = geomavg(i, 0, 11, power_mW($x,$i)/mips($x,$i))/30 < 1
+
+set db_report_conf_col_size = 50
+set db_report_metric_col_size = 20 
+
+opt_load_optimizer "st_parallel_doe"
+
+set i = 0
+
+set local_parallelism = 8
+
+set random_doe_solutions_number = 256
+
+
+
+
+

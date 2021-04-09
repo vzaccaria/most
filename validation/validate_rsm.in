@@ -1,0 +1,16 @@
+#!/bin/sh
+date=`date +"%B %e, %Y"`
+cd @bdir@/examples/ro_sesc && bunzip2 ./fullSESC_RO.db.bz2
+@bdir@/bin/most -f @bdir@/validation/full_sesc_ro_rsm_validation.scr -p -T
+pstopdf linear-err-nsim-curr-rsms.ps
+pstopdf shepard-err-nsim-curr-rsms.ps
+pstopdf rbf-err-nsim-curr-rsms.ps
+pstopdf nn-err-nsim-curr-rsms.ps
+pstopdf spline-err-nsim-curr-rsms.ps
+# echo "[MOST] Validation of RSMs started in $date" | mutt -s "[MOST] Validation of RSMs started in $date" -a linear-err-nsim-curr-rsms.pdf -a shepard-err-nsim-curr-rsms.pdf -a rbf-err-nsim-curr-rsms.pdf -a nn-err-nsim-curr-rsms.pdf -a spline-err-nsim-curr-rsms.pdf zaccaria@elet.polimi.it gpalermo@elet.polimi.it castro.fabrizio@gmail.com
+
+# curd=`date +"%F_%H-%M-%S"`
+# svn co https://svn.ws.dei.polimi.it/multicube/trunk/validation/most/rsms
+# mkdir rsms/$curd
+# cp *-rsms.pdf rsms/$curd
+# cd rsms && svn add $curd && svn commit -m "Added $curd results file"

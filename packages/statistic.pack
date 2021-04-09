@@ -1,0 +1,505 @@
+
+# Compute the average value of an input vector v
+set_procedure average(x)
+	set_local i = 0
+	set_local summation = 0.0
+	if(size($x)==0)
+		return 0
+	endif
+	while($i<size($x))
+		set_local summation = $summation + $x@$i
+		set_local i = $i+1
+	done
+	return $summation/$i
+done
+
+set_procedure variance(x)
+	set_local mean = average($x)
+	set_local i = 0
+	set_local summation = 0
+	if(size($x)==0)
+		return 0
+	endif
+	while($i<size($x))
+		set_local summation = $summation + pow($x@$i-$mean,2)
+		set_local i = $i+1
+	done
+	if($i<2)
+		return 0
+	endif
+	return $summation/($i-1)
+done
+
+set_procedure corr(x,y)
+	if(size($x) != size($y))
+		return 0
+	endif
+	if(size($x)<2)
+		return 0
+	endif
+	set_local x_m = average($x)
+	set_local y_m = average($y)
+	set_local i = 0
+	set_local summation = 0
+	set_local std_x = pow(variance($x),0.5)
+	set_local std_y = pow(variance($y),0.5)
+	while($i<size($x))
+		set_local summation = $summation + (($x@$i - $x_m)/$std_x)*(($y@$i - $y_m)/$std_y)
+		set_local i = $i+1
+	done
+	return $summation/(($i-1))
+done
+
+set_procedure get_normal_probability_data(lrres, metric_index)
+	set_local v1 = $lrres@$metric_index@"residuals"
+	set_local v2 = $lrres@$metric_index@"zj"
+	return [ $v1, $v2, $metrics@$metric_index ] 
+done
+
+set_procedure normalize(vect, box)
+	set_local newv = [ ]
+	set_local i = 0 
+	while($i<size($vect))
+		if(string($box) == "log")
+		     set_local newv@$i = log($vect@$i)
+		else
+		     set_local newv@$i = pow($vect@$i, $box)
+		endif	
+		set_local i = $i+1
+	done
+	set_local mean = average($newv)
+	set_local std = sqrt(variance($newv))
+	set_local i = 0
+	while($i<size($newv))
+		set_local newv@$i = ($newv@$i - $mean)/$std
+		set_local i = $i+1
+	done
+	return (* data=$newv mean=$mean std=$std box=$box *)
+done
+
+set_procedure denormalize(vect, data)
+	set_local i = 0 
+	set_local newv = [ ]
+	while($i<size($vect))
+		set_local newv@$i = ($vect@$i * $data@"std") + $data@"mean"
+		if(string($data@"box") == "log")
+		     set_local newv@$i = exp($newv@$i)
+		else
+		     set_local newv@$i = pow($newv@$i, 1/$data@"box")
+		endif	
+		set_local i = $i+1
+	done
+	return $newv
+done
+	
+set_procedure linear_model(designs, observations, is_quadratic, is_interaction, box)
+	set_local pred = [ ]
+	if(size($designs)!=size($observations))
+		return 0
+	endif
+	set_local d = 0
+	while($d<size($designs))
+		set_local pred@$d = poly($designs@$d, $is_quadratic, $is_interaction)
+		set_local d = $d + 1
+	done
+	set_local norm_data = normalize($observations, $box)
+	set_local lr_res = linear_regression($pred, $norm_data@"data")
+	return (* norm=$norm_data regression=$lr_res is_quadratic=$is_quadratic is_interaction=$is_interaction *)
+done
+
+set_procedure single_estimate(des, coeff) 
+	set_local res = $coeff@0
+	set_local i = 1
+	set_local mul = 0
+	while($i< (size($coeff)))
+		set_local p = $coeff@$i * $des@($i-1)
+		set_local i = $i+1
+		set_local mul = $mul + $p
+	done
+	return $mul+$res
+done
+
+set_procedure estimate(designs, linear_model)
+	set_local d = 0
+	set_local tmp = [ ]
+	while($d<size($designs))
+		set_local pred = poly($designs@$d, $linear_model@"is_quadratic", $linear_model@"is_interaction")
+		set_local obs = single_estimate($pred, $linear_model@"regression"@"coefficients")
+		set_local tmp@$d = $obs
+		set_local d = $d + 1
+	done
+	return denormalize($tmp, $linear_model@"norm")
+done
+
+set_procedure residual_plot(lr, title, file_name)
+	if(string($file_name) == "")
+		db_plot_vector [ $lr@"regression"@"residuals", $lr@"regression"@"zj", $title ] --xaxis="residuals" --yaxis="zj"
+	else
+		db_plot_vector [ $lr@"regression"@"residuals", $lr@"regression"@"zj", $title ] --xaxis="residuals" --yaxis="zj" --output=$file_name
+	endif
+done
+
+set_procedure poly(vector, is_quadratic, is_interaction)
+	set_local result = [ ]
+	set_local i = 0
+	while($i<size($vector))
+		set_local result@($i) = $vector@$i
+		set_local i = $i + 1
+	done
+	if($is_quadratic)
+ 		set_local i = 0
+		set_local rs = size($result)
+		while($i<$rs)
+			set_local result@($i+$rs) = $result@($i)*$result@($i)
+			set_local i = $i + 1
+		done
+	endif
+	if($is_interaction)
+		set_local rs = size($result)
+		set_local index = $rs
+		if($rs>1)
+			set_local i = 0
+			while($i<$rs)
+				set_local k = $i+1
+				while($k<$rs)
+					set_local result@($index) = $result@($i)*$result@($k)
+					set_local k = $k + 1
+					set_local index = $index + 1
+				done
+				set_local i = $i + 1
+			done
+		endif
+	endif
+	return $result
+done
+
+set_procedure compute_norm_max_error(db, dbref)
+	set_local nmetrics = size($metrics)
+        set_local summation= create_empty_vector($nmetrics, 0)
+        foreach point in get_points($db)
+              if(is_valid($point))
+                set_local pr = get_similar_point($dbref, $point)
+                if(is_valid($pr))
+                        set_local met = 0
+                        while($met<$nmetrics)
+                                set_local sx = metrics($point)@$met - metrics($pr)@$met
+                                set_local summation@$met = maxf($summation@$met, abs($sx/metrics($pr)@$met))
+                                set_local met = $met+1
+                        done
+                endif   
+             endif
+        done
+        return $summation
+done
+
+set_procedure compute_rmse(db, dbref)
+	set_local nmetrics = size($metrics)
+        set_local summation= create_empty_vector($nmetrics, 0)
+	set_local npo = 0
+        foreach point in get_points($db)
+              if(is_valid($point))
+                set_local pr = get_similar_point($dbref, $point)
+                if(is_valid($pr))
+			set_local npo = $npo + 1
+                        set_local met = 0
+                        while($met<$nmetrics)
+                                set_local sx = metrics($point)@$met - metrics($pr)@$met
+                                set_local summation@$met = $summation@$met + pow($sx,2)
+                                set_local met = $met+1
+                        done
+                endif   
+             endif
+        done
+	set_local met = 0
+	while($met<$nmetrics)
+		set_local summation@$met = sqrt(($summation@$met)/$npo)
+		set_local met = $met+1
+	done
+        return $summation
+done
+
+set_procedure compute_norm_avg_error(db, dbref)
+	set_local nmetrics = size($metrics)
+        set_local summation= create_empty_vector($nmetrics, 0)
+	set_local npo = 0
+        foreach point in get_points($db)
+              if(is_valid($point))
+                set_local pr = get_similar_point($dbref, $point)
+                if(is_valid($pr))
+			set_local npo = $npo + 1
+                        set_local met = 0
+                        while($met<$nmetrics)
+                                set_local sx = metrics($point)@$met - metrics($pr)@$met
+                                set_local summation@$met = $summation@$met + abs($sx/metrics($pr)@$met)
+                                set_local met = $met+1
+                        done
+                endif   
+             endif
+        done
+	set_local met = 0
+	while($met<$nmetrics)
+		set_local summation@$met = ($summation@$met)/$npo
+		set_local met = $met+1
+	done
+        return $summation
+done
+
+
+# Compute the average value of an input vector v
+set_procedure to_bins(vec, mn, mx, step)
+	set_local bins = [ ] 
+	set_local cur_min = $mn
+	set_local cur_max = $mn+$step
+	while($cur_max <= $mx)
+		set_local i = 0
+		set_local cur_bin = [ ] 
+		while($i<size($vec))
+			if(($vec@$i@0 >= $cur_min) & ($vec@$i@0 < $cur_max))
+				set_local sz = size($cur_bin)
+				set_local cur_bin@$sz = $vec@$i
+			endif
+			set_local i = $i + 1
+		done
+		set_local bs = size($bins)
+		set_local bins@$bs = [ $cur_min, $cur_bin ] 
+		set_local cur_min = $cur_max
+		set_local cur_max = $cur_max + $step
+	done	
+	return $bins
+done
+
+set_procedure bin_count(bins)
+	set_local i = 0
+	set_local sz = size($bins)
+	set_local xc = [ ] 
+	set_local yc = [ ] 
+	while($i < $sz)
+		set_local this_bin = $bins@$i
+		set_local data = $this_bin@1	
+		set_local data = get_column($data, 1)
+		set_local av = size($data)
+		set_local xc@$i = $this_bin@0
+		set_local yc@$i = $av
+		set_local i = $i + 1
+	done
+	return [ $xc, $yc ] 	
+done
+
+set_procedure bin_avg(bins)
+	set_local i = 0
+	set_local sz = size($bins)
+	set_local xc = [ ] 
+	set_local yc = [ ] 
+	while($i < $sz)
+		set_local this_bin = $bins@$i
+		set_local data = $this_bin@1	
+		set_local data = get_column($data, 1)
+		set_local av = average($data)
+		set_local xc@$i = $this_bin@0
+		set_local yc@$i = $av
+		set_local i = $i + 1
+	done
+	return [ $xc, $yc ] 	
+done
+
+set_procedure bin_std(bins)
+	set_local i = 0
+	set_local sz = size($bins)
+	set_local xc = [ ] 
+	set_local yc = [ ] 
+	set_local yc2 = [ ] 
+	while($i < $sz)
+		set_local this_bin = $bins@$i
+		set_local data = $this_bin@1	
+		set_local data = get_column($data, 1)
+		set_local av = average($data)
+		set_local sd = sqrt(variance($data))
+		set_local xc@$i = $this_bin@0
+		set_local yc@$i = $sd
+		if($yc@$i < 0)
+			set_local yc@$i  = 0
+		endif
+		set_local i = $i + 1
+	done
+	return [ $xc, $yc ] 	
+done
+
+set_procedure get_percentile_value(percentile,ordered_vector)
+	set_local last_element	= size($ordered_vector) - 1
+	if($percentile<=0)
+		return $ordered_vector@0
+	endif
+	if($percentile>=100)
+		return $ordered_vector@$last_element
+	endif
+	set_local p		= $percentile / 100
+	set_local n		= $p * $last_element
+	set_local d		= decimal_part($n)
+	set_local k		= integer_part($n)
+	set_local k_next	= $k + 1
+	set_local Vk		= $ordered_vector@$k
+	set_local Vk_next	= $ordered_vector@$k_next
+	set_local value		= $Vk + $d * ($Vk_next - $Vk)
+	return $value
+done
+
+set_procedure bin_box(bins)
+	set_local sz		= size($bins)
+	set_local out		= { }
+	set_local i		= 0
+
+	while($i < $sz)	
+		set_local this_bin	= $bins@$i
+		set_local tb_x		= $this_bin@0
+		set_local tb_ys		= $this_bin@1
+		set_local tb_ys		= get_column($tb_ys, 1)
+		set_local tb_ys		= sort_vector_asc($tb_ys)
+		set_local tb_sz		= size($tb_ys)
+
+		if( $tb_sz > 1 )
+			set_local last_element	= $tb_sz - 1
+
+			set_local tb_sample_min	= $tb_ys@0
+			set_local tb_Q1		= get_percentile_value(25,$tb_ys)
+			set_local tb_Med	= get_percentile_value(50,$tb_ys)
+			set_local tb_Q3		= get_percentile_value(75,$tb_ys)
+			set_local tb_sample_max	= $tb_ys@$last_element
+
+			set_local IQR		= $tb_Q3 - $tb_Q1
+			if( $tb_sample_min < ( $tb_Q1 - ( 1.5 * $IQR ) ) ) 
+				set_local tb_sample_min	= $tb_Q1 - ( 1.5 * $IQR )
+			endif
+			if( $tb_sample_max > ( $tb_Q3 + ( 1.5 * $IQR ) ) )
+				set_local tb_sample_max	= $tb_Q3 + ( 1.5 * $IQR )
+			endif
+
+			set_local tb_outliers 	= []
+			set_local co_sz		= 0
+			set_local j 		= 0
+			while($j < $tb_sz)
+				if( ($tb_ys@$j < $tb_sample_min) | ($tb_ys@$j > $tb_sample_max) )
+					set_local tb_outliers@$co_sz	= $tb_ys@$j
+					set_local co_sz			= $co_sz + 1
+				endif
+
+				set_local j = $j + 1
+			done
+
+			set_local current_map	= (* x=$tb_x sample_min=$tb_sample_min Q1=$tb_Q1 Med=$tb_Med Q3=$tb_Q3 sample_max=$tb_sample_max outliers=$tb_outliers *)
+			set_local out		= $out + { $current_map }
+		endif
+
+		set_local i 		= $i + 1
+	done
+	return $out
+done
+
+set_procedure count_if_less_than(data, threshold)
+	set_local sz = size($data)
+	set_local i = 0
+	set_local n = 0
+	while($i < $sz)
+		if($data@$i < $threshold)
+			set_local n = $n + 1
+		endif
+		set_local i = $i + 1
+	done	
+	return $n
+done
+
+set_procedure bin_prob(bins, threshold)
+	set_local i = 0
+	set_local sz = size($bins)
+	set_local xc = [ ] 
+	set_local yc = [ ] 
+	set_local yc2 = [ ] 
+	set grand_total = 0
+	set feasible_count = 0
+	while($i < $sz)
+		set_local this_bin = $bins@$i
+		set_local data = $this_bin@1	
+		set_local data = get_column($data, 1)
+		set_local num = size($data)
+		set_local xc@$i = $this_bin@0
+		set_local grand_total = $grand_total + $num
+		set_local feasible_count = count_if_less_than($data, $threshold) + $feasible_count
+		if($grand_total > 0)
+			set_local yc@$i = $feasible_count 
+		else
+			set_local yc@$i = 0
+		endif
+		set_local i = $i + 1
+	done
+	set_local i=0
+	#set prob = 0
+	while($i < $sz)
+		set_local yc@$i = ($yc@$i/$grand_total)
+		set_local i = $i + 1
+	done
+	return [ $xc, $yc ] 	
+done
+
+set_procedure filter_by(data, name, is_doe)
+	set_local i = 0
+	set_local ret = [ ]
+	set_local sz = size($data)
+	while($i<$sz)
+		set_local t = size($ret)
+		if($is_doe)
+			if($data@$i@2 == $name)
+				set_local ret@$t = $data@$i
+			endif
+		else
+			if($data@$i@3 == $name)
+				set_local ret@$t = $data@$i
+			endif
+		endif
+		set_local i = $i+1
+	done
+	return $ret
+done
+
+set_procedure bin_prob_filter(bins, threshold, name, is_doe)
+	set_local i = 0
+	set_local sz = size($bins)
+	set_local xc = [ ] 
+	set_local yc = [ ] 
+	set_local yc2 = [ ] 
+	set grand_total = 0
+	set feasible_count = 0
+	while($i < $sz)
+		set_local this_bin = $bins@$i
+		set_local data = $this_bin@1	
+		set_local data = filter_by($data, $name, $is_doe)
+		set_local data = get_column($data, 1)
+		set_local num = size($data)
+		set_local xc@$i = $this_bin@0
+		set_local grand_total = $grand_total + $num
+		set_local feasible_count = count_if_less_than($data, $threshold) + $feasible_count
+		if($grand_total > 0)
+			set_local yc@$i = $feasible_count 
+		else
+			set_local yc@$i = 0
+		endif
+		set_local i = $i + 1
+	done
+	set_local i=0
+	#set prob = 0
+	while($i < $sz)
+		set_local yc@$i = ($yc@$i/$grand_total)
+		set_local i = $i + 1
+	done
+	return [ $xc, $yc ] 	
+done
+
+set_procedure norm(data, size)
+	set_local i = 0
+	set_local sz = size($data)
+	while($i < $sz)
+		set_local data@$i = $data@$i / $size
+		set_local i = $i + 1
+	done
+	return $data
+done
+
+echo "Initialization: STShell 'statistics' pack read."

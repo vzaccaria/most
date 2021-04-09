@@ -1,0 +1,105 @@
+
+set_function all(x) = 1
+
+set_procedure db_copy_p(db, dbd, pred)
+	db_create $dbd
+	foreach p in get_points($db)
+		if(is_valid($p))
+			if($pred($p) == 1)
+				db_insert_point $p --destination=$dbd
+			endif
+		endif
+	done	
+done
+
+set_procedure db_apply_p(db, fun, pred)
+	foreach p in get_points($db)
+		if(is_valid($p))
+			if($pred($p) == 1)
+				$fun($p)
+			endif
+		endif
+	done	
+done
+
+set_procedure db_apply(db, fun)
+	db_apply_p($db, $fun, ^all)
+done
+
+set_procedure db_reduce_p(db, fun, init, pred)
+	set val = $init	
+	foreach p in get_points($db)
+		if(is_valid($p))
+			if($pred($p) == 1)
+				set val = $fun($p, $val)
+			endif
+		endif
+	done	
+	return $val
+done
+
+set_procedure db_reduce(db, fun, init)
+	return db_reduce_p($db, $fun, $init, ^all)
+done
+
+set_procedure db_count_p(db, pred)
+	return db_reduce_p($db, ^(p, acc)=$acc+1, 0, $pred)
+done
+
+# We dont implement complete closures, so variable names in anonymous functions should be non overlapping with others..
+set_procedure db_avg_p(db, myfun, pred )
+	set_local count = db_count_p($db, $pred)
+	set_local ssum  = db_reduce_p($db, ^(p, acc)=$acc+$myfun($p), 0, $pred)
+	return $ssum/$count
+done
+
+set_procedure db_var_p(db, varfun, pred )
+	set_local aver  = db_avg_p($db, $varfun, $pred)
+	set_local count = db_count_p($db, $pred)
+	set_local ssum  = db_reduce_p($db, ^(p, acc)=$acc+($varfun($p)-$aver)*($varfun($p)-$aver), 0, $pred)
+	return $ssum/($count-1)
+done
+
+set_procedure db_max_p(db, fun, pred)
+	set val = 0
+	foreach p in get_points($db)
+                if(is_valid($p))
+			if($pred($p) == 1)
+				if($fun($p)>$val)
+					set val = $fun($p)
+				endif
+			endif
+		endif
+	done
+	return $val
+done
+
+set_procedure db_max(db, fun)
+	return db_max_p($db, $fun, ^all)
+done
+
+set_procedure db_min_p(db, fun, pred)
+	set val = 0
+	set initial = 1
+	foreach p in get_points($db)
+                if(is_valid($p))
+			if($pred($p) ==1)
+				if($initial == 1)
+					set initial = 0
+					set val = $fun($p)
+				else
+					if($fun($p)<$val)
+						set val = $fun($p)
+					endif
+				endif
+			endif
+		endif
+	done
+	return $val
+done
+
+set_procedure db_min(db, fun)
+	return db_min_p($db, $fun, ^all)
+done
+
+echo "Initialization: STShell 'functional' pack read."

@@ -1,0 +1,75 @@
+#!/bin/bash
+# This is a very rudimental script for running custom regression tests on the most 
+# platform. Every test has its own piece of code for executing it and outputting
+# the result which is of the form PASSED, NOT PASSED. So far there is no support 
+# for creating tests in a simpler way (i.e. through a configuration file).
+# Keep in mind that this is processed by configure to setup destination directory
+# variables.
+# This file should test the executable which is in the @bdir@/image/bin directory
+# with whatever driver/optimizer needed.
+# Reference test files should be put in the directory tests with a name like testX_output.ref
+# and be compared with the actual output of the most which should be put in testX_output.
+# Look at Test number 1 for a more detailed description.
+#
+# Author: Vittorio Zaccaria, zaccaria@elet.polimi.it 2008
+#
+
+# Test number 1
+#
+# Execute an most script
+@bdir@/bin/most -S -x @bdir@/tests/xml/multicube_design_space_test.xml -f @sdir@/tests/xml/test_1.scr >& test1_output
+diff test1_output @sdir@/tests/xml/test1_output.ref > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test x1: NOT PASSED"
+	exit 1
+else
+	echo "Test x1: PASSED"
+fi
+
+# Test number 2
+#
+# Execute an most script
+@bdir@/bin/most -S -x @bdir@/tests/xml/multicube_design_space_test.xml -f @sdir@/tests/xml/test_2.scr >& test2_output
+diff test2_output @sdir@/tests/xml/test2_output.ref > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test x2: NOT PASSED"
+	exit 1
+else
+	echo "Test x2: PASSED"
+fi
+
+# Test number 3
+#
+# Execute an most script
+@bdir@/bin/most -S -x @bdir@/tests/xml/multicube_design_space_test_err.xml -f @sdir@/tests/xml/test_3.scr >& test3_output
+diff test3_output @sdir@/tests/xml/test3_output.ref > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test x3: NOT PASSED"
+	exit 1
+else
+	echo "Test x3: PASSED"
+fi
+
+# Test number 4
+#
+# Execute an most script
+@bdir@/bin/most -S -x @bdir@/tests/xml/multicube_design_space_test_dump.xml -f @sdir@/tests/xml/test_4.scr >& test4_output
+diff test4_output @sdir@/tests/xml/test4_output.ref > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test x4: NOT PASSED"
+	exit 1
+else
+	echo "Test x4: PASSED"
+fi
+
+# Test number 8 
+#
+# Execute an most script
+#@bdir@/bin/most -S -x @bdir@/tests/xml/multicube_design_space_test_R1.4.xml -f @bdir@/tests/xml/test_5.scr >& test5_output
+#diff test5_output @bdir@/tests/xml/test5_output.ref > tmp
+#if [ "$?" -ne 0 ]; then 
+#	echo "8) Tested XML design space R1.4 extn.  : NOT PASSED"
+#	exit 1
+#else
+#	echo "8) Tested XML design space R1.4 extn.  : PASSED"
+#fi

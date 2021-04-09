@@ -1,0 +1,20 @@
+.SH NAME
+set_constraint
+.SH SYNOPSYS
+\fBset_constraint cn_name(point) = expr1($point) OP expr2($point)\fP
+.SH DESCRIPTION
+
+This command sets a boolean constraint or \fIpredicate\fP for the optimization problem. Whenever the design point \fIpoint\fP fails to meet the specified constraint(s), it is considered \fInon-feasible\fP by the optimization algorithm. 
+\fIOP\fP can be one of the following: >, <, >=, <=, ==. 
+In the case of the == operator, a margin of 10e9 is considered between the two expression associated to the constraint. This margin can be changed by modifying the \fIconstraint_precision\fP shell variable.
+
+Each non-feasible configuration has a \fIrank\fP and a \fIpenalty\fP. The rank is the number of constraints that have been violated. The penalty is the product of the slacks associated to the constraints. The rank and the penalty are taken into account when filtering with the \fBdb_filter_pareto\fP command.
+
+.SH EXAMPLES
+\f(CRset_constraint frame_rate(x) = frame_s($x)/25 > 1\fP
+
+.SH SEE ALSO
+\fBopt_remove_constraint\fP, \fBopt_tune\fP, \fBset\fP
+
+.SH RETURN VALUE
+The return variable $? is set to the value of true on success, false otherwise.

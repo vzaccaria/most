@@ -1,0 +1,22 @@
+Information: Assigned value 1 to a
+Information: Assigned value -1 to b
+Information: Assigned value 0 to c
+Information: Assigned value -1 to d
+Information: Assigned value -1 to e
+Information: Assigned value 2 to f
+Information: Assigned value 1.000000 to g
+Information: Assigned value -1.000000 to h
+Information: Assigned value 0.000000 to i
+Information: Assigned value 2.000000 to j
+Information: Assigned value "A1" to k
+Information: Assigned value "-1A1" to l
+Information: Assigned value [ 1, 2, 3 ] to m
+Information: Assigned value 2 to n
+Information: Assigned value 2 to o
+Information: Assigned value 5 to p
+Information: Assigned value { "A", "B", "C" } to q
+Information: Assigned value 36 to z
+Information: Assigned value 11 to y
+Information: Assigned value 0 to o
+Information: Assigned value 66 to p
+Information: Exiting from MOST shell

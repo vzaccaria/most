@@ -1,0 +1,16 @@
+Information: Creating test
+Information: Loading test
+Information: Assigned value [ "1000", "1009" ] to S1_bounds
+Information: Assigned value [ "0", "9" ] to S2_bounds
+Information: Assigned value [ "0", "9" ] to S3_bounds
+Information: Assigned value [ "S1", "S2", "S3" ] to ds_parameters
+Information: Assigned value [ "M1", "M2", "M3" ] to metrics
+Information: Assigned value { "M1", "M2", "M3" } to pareto_metrics
+Information: Assigned value "M1" to b
+Metric M1
+Information: Assigned value "M2" to b
+Metric M2
+Information: Assigned value "M3" to b
+Metric M3
+Information: Removing test
+Information: Exiting from MOST shell

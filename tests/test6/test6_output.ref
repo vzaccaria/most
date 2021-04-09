@@ -1,0 +1,26 @@
+Information: Creating test
+Information: Loading test
+Information: Assigned value [ "1000", "1009" ] to S1_bounds
+Information: Assigned value [ "0", "9" ] to S2_bounds
+Information: Assigned value [ "0", "9" ] to S3_bounds
+Information: Assigned value [ "S1", "S2", "S3" ] to ds_parameters
+Information: Assigned value [ "M1", "M2", "M3" ] to metrics
+Information: Assigned value { "M1", "M2", "M3" } to pareto_metrics
+Information: Current optimizer has been set to 'Parallel Pareto DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Full search DoE'
+Information: Assigned value 0 to a
+Information: Assigned value 1 to a
+Information: Assigned value 2 to a
+Information: Assigned value 3 to a
+Information: Assigned value 4 to a
+Information: Assigned value 5 to a
+Information: Assigned value 6 to a
+Information: Assigned value 7 to a
+Information: Assigned value 8 to a
+Information: Assigned value 9 to a
+Information: Assigned value 10 to a
+A is less than 11
+Information: Assigned value 20 to a
+A is more than 11
+Information: Removing test
+Information: Exiting from MOST shell

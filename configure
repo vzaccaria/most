@@ -1,0 +1,403 @@
+#!/bin/sh
+
+#set -e
+
+
+# =======
+# Startup
+# =======
+
+echo
+echo "------------------------------------------------------------------------"
+echo configure `pwd`
+echo
+
+
+# ==============
+# Default values
+# ==============
+
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+gplsrcdir="$srcdir/gpl"
+xdrsrcdir="$srcdir/gpl"
+dstdir=`pwd`
+static=""
+
+readlinedir="/usr"
+classicrldir="/usr"
+
+bi_gnuplot="no"
+buildgpl="yes"
+buildrbf="no"
+buildnn="no"
+buildsplines="no"
+
+redhat="no"
+
+fanndir=""
+boostdir=""
+image_np="yes"
+buildpackage="no"
+usecases="no"
+buildm3="no"
+parma="no"
+
+snapshot_or_release=`grep "^snapshot\|^release" $srcdir/HISTORY | head -n 1`
+codename=`awk '{if($2=="Codename") print $3}' $srcdir/HISTORY`
+relname=`awk '{if($2=="Release") print $3}' $srcdir/HISTORY`
+date=`date +"%B %e, %Y"`
+
+which gsl-config > /dev/null
+if [ $? -ne 0 ]; then
+	echo "Assuming GSL library located in /usr/lib"
+	gsl_include="-I/usr/include"
+	gsl_libs="-lgsl -lgslcblas"
+else
+	gsl_include=`gsl-config --cflags`
+	gsl_libs=`gsl-config --libs`
+fi
+
+which xml2-config > /dev/null
+if [ $? -ne 0 ]; then
+	echo "Assuming XML library located in /usr/lib"
+	xml2_include="-I/usr/include/libxml2"
+	xml2_libs="-lxml2"
+else
+	xml2_include=`xml2-config --cflags`
+	xml2_libs=`xml2-config --libs`
+fi
+
+
+install_doc=""
+
+
+image=$dstdir/image
+
+
+# ==================================
+# Process the command line arguments
+# ==================================
+
+all_arg=$*
+args=
+
+while :
+do
+# no args
+        case $# in
+	0)
+		break
+		;;
+	esac
+
+# get first arg and shuffle
+	option=$1
+	shift
+
+# make all options have two hyphens
+	orig_option=$option
+	case $option in
+		--*) ;;
+		-*) option=-$option ;;
+	esac
+
+# split the option to get its argument
+	case $option in
+	--*=*)
+		optarg=`echo $option | sed -e 's/^[^=]*=//'`
+		;;
+	esac
+
+# process the options
+	case $option in
+
+	    --optimized) cxxflags="$cxxflags -O2";;
+
+	    --dbg)       cxxflags="$cxxflags -g";;
+	    
+	    --nothreads)       cxxflags="$cxxflags -DST_NO_THREADS";;
+	    
+	    --nolic*)       cxxflags="$cxxflags -D__MOST_NO_LICENSE__";;
+	   
+	    --redhat*)       redhat="yes"
+			     cxxflags="$cxxflags -D__RHEL__";;
+	    
+            --osx)       cxxflags="$cxxflags -D__MAC_OSX__";;
+	    
+	    --mdbg)       cxxflags="$cxxflags -DST_DATABASE_MALLOC_DEBUG";;
+	    
+	    --memtrim)       cxxflags="$cxxflags -DST_DATABASE_MALLOC_TRIM";;
+
+	    --tcad09dominance) cxxflags="$cxxflags -DST_NEW_DOMINANCE_RELATION";;
+
+	    --host=*) 	  cxxflags="$cxxflags -D__HOST_BUILD__=\\\\\"$optarg\\\\\"";;
+	    
+	    --build=*) 	  cxxflags="$cxxflags -D__BUILD_BUILD___=\\\\\"$optarg\\\\\"";;
+	    
+	    --image=*)    image="$optarg"
+			  image_np="no";;
+	    
+	    --readlinedir=*)    readlinedir="$optarg";;
+
+            --openssldir=*) cxxflags="$cxxflags -I$optarg/include"
+                            linkflags="$linkflags -L$optarg/lib";;
+
+	    
+	    --static) 	  static="-static";;
+	    
+
+	    
+	    --buildsplines)     buildsplines="yes"
+	    			buildgpl="yes";;
+	    
+	    --buildrbf=*)	  buildrbf="yes"
+	    			  boostdir="$optarg";;
+
+	    --buildnn=*)	  buildnn="yes"
+	    			  fanndir="$optarg";;
+
+	    --buildpackage)	  buildpackage="yes"
+	    			  buildm3="yes";;
+
+	    --gnuplot)		  bi_gnuplot="yes";;
+
+	    --buildrelease)	  buildnn="yes"
+	    		          buildsplines="yes"
+				  buildrbf="yes"
+				  buildgpl="yes"
+				  boostdir=""
+				  fanndir=""
+	    			  buildm3="yes";;
+	    
+	    --usecases)	  usecases="yes";;
+	    
+	    --2parma*)	  parma="yes";;
+
+	  *)
+	    echo "Error : unknown option $option"
+
+            echo "Usage: $0 [flags]"
+            echo "flags:"
+            echo "	"
+            echo "--dbg                 Enable symbolic debugging"
+            echo "--mdbg                Enable malloc debugging"
+            echo "--memtrim             Force memory trim"
+            echo "--optimized           Enables compile level optimization switches"
+	    echo "--nothreads           Disable local node multi-threading for simulations"
+            echo "--image=<path>        Specify the path in which the stshell image should be installed"
+            echo "--buildrelease        Build the complete package (all RSMs) as if it were installed in the specified directory"
+            echo "--buildpackage        Build the package as if it were installed in the /usr/local/most-pdm directory"
+            echo "--redhat              Build the release package for Red Hat"
+            echo "--readlinedir=<path>  Specify the path to the readline library"
+	    echo "--static              Generate a static file"
+	    echo "--nolicense           Generate an executable that does not check for a license"
+ 	    echo "--buildsplines        Generate makefile for R based splines"
+ 	    echo "--buildnn=<dir>       Generate makefile for GPL NN components, <dir> is the libfann directory"
+ 	    echo "--buildrbf=<dir>      Generate makefile for RBF models, <dir> is the boost lib installation dir"
+ 	    echo "--usecases            Create use cases bundles"
+ 	    echo "--2parma_prototypes	Create 2parma prototype bundles"
+ 	    echo "--tcad09dominance     Transitional, use the tcad09 computation of dominance"
+
+	    echo ""
+	    echo "Suggested configuration:"
+	    echo "$0 --buildrelease --nolicense"
+
+            exit 1
+	esac
+done
+
+if [ "$readlinedir" != "$classicrldir" ]
+then
+	cxxflags="$cxxflags -D__BSD_READLINE__ -I$readlinedir/include"
+	linkflags="$linkflags -L$readlinedir/lib -ledit"
+else
+	cxxflags="$cxxflags -D__BSD_READLINE__"
+	linkflags="-ledit"
+fi	
+
+if [ "$image_np" != "no" ]
+then
+	image_dd=`dirname $image`
+	image_dd=`cd $image_dd; pwd`
+	echo "Build directory          : $image_dd/image (automatically assumed)" 
+else
+	image_dd=`cd $image; pwd`
+	echo "Build directory          : $image_dd (overridden when building debian package)" 
+	image=$image_dd
+fi
+
+
+if [ "$buildpackage" != "no" ]
+then
+	bdir="/usr/local/most-pdm"
+	adir="$srcdir/debian/most-pdm/usr/local/most-pdm"
+else
+	bdir=$image
+	adir=$image
+fi
+	
+	echo "Final install            : $bdir" 
+	echo "Temporary install        : $adir" 
+
+
+
+if [ "$buildnn" != "no" ]
+then
+	if [ "x$fanndir" = "x" ]
+	then
+		fanndir="/usr/local"
+	echo "Assuming FANN library at : $fanndir"
+	fi
+	echo "Fann/NN                  : $buildnn - $fanndir"
+else
+	echo "Fann/NN                  : $buildnn - $fanndir"
+fi
+
+if [ "$buildrbf" != "no" ]
+then
+	if [ "x$boostdir" = "x" ]
+	then
+		boostdir="/usr/local"
+	echo "Assuming BOOST library at: $boostdir"
+	fi
+	echo "Boost/rbf                : $buildrbf - $boostdir"
+else
+	echo "Boost/rbf                : $buildrbf - $boostdir"
+fi
+
+echo "Splines                  : $buildsplines"
+
+if [ "$buildm3" != "no" ]
+then
+	echo "Building Multicube Exp.  : yes"
+else
+	echo "Building Multicube Exp.  : no"
+fi
+	
+
+# CFLAGS (plain, so, and xml) defined here. just add some defines
+cxxflags="$cxxflags -D__STSHELL_VERSION__=\\\\\"$snapshot_or_release\\\\\" -D__STSHELL_CODENAME__=\\\\\"$codename\\\\\" -D__STSHELL_RELEASE_NAME__=\\\\\"R$relname\\\\\" $xml2_include"
+othercxxflags=""
+xmlcxxflags="$xml2_include"
+
+echo "#define __STSHELL_DATE__                          \"$date\"" > config.h
+echo "#define __STSHELL_HARDWIRED_BUILD_PATH__          \"$adir\"" >> config.h
+echo "#define __STSHELL_INSTALLATION_PATH__             \"$bdir\"" >> config.h
+echo "#define __STSHELL_VERSION__                       \"$snapshot_or_release\"" >> config.h
+echo "#define __STSHELL_CODENAME__                      \"$codename\"" >> config.h
+echo "#define __STSHELL_RELEASE_NAME__                  \"R$relname\"" >> config.h
+
+# LINK flags for .so modules and others
+
+linkflags="$linkflags"
+otherlinkflags="-L. " 
+xmllinkflags="$otherlinkflags $xml2_libs"
+
+othergpllinkflags="$otherlinkflags $gsl_libs"
+othergplcxxflags="$othercxxflags $gsl_include"
+
+cat << EOF > sedscript
+    s?@srcdir@?$srcdir?g
+    s?@gplsrcdir@?$gplsrcdir?g
+    s?@dstdir@?$dstdir?g
+    s?@image@?$image?g
+    s?@bdir@?$bdir?g
+    s?@cxxflags@?$cxxflags?g
+    s?@linkflags@?$linkflags?g
+    s?@othercxxflags@?$othercxxflags?g
+    s?@otherlinkflags@?$otherlinkflags?g
+    s?@xmlcxxflags@?$xmlcxxflags?g
+    s?@xmllinkflags@?$xmllinkflags?g
+    s?@othergplcxxflags@?$othergplcxxflags?g
+    s?@othergpllinkflags@?$othergpllinkflags?g
+    s?@with_doc@?$install_doc?g
+    s?@static@?$static?g
+    s?@snapshot@?$snapshot_or_release?g
+    s?@releasename@?R$relname?g
+    s?@releasenamen@?$relname?g
+    s?@boostdir@?$boostdir?g
+    s?@fanndir@?$fanndir?g
+    s?@xdrsrcdir@?$xdrsrcdir?g
+    s?@buildnn@?$buildnn?g
+    s?@buildgpl@?$buildgpl?g
+    s?@buildrbf@?$buildrbf?g
+    s?@buildsplines@?$buildsplines?g
+    s?@buildm3@?$buildm3?g
+EOF
+
+sed -f sedscript $srcdir/makefile.in > $dstdir/makefile
+sed -f sedscript $srcdir/tests/do_tests.in > $dstdir/do_tests
+sed -f sedscript $srcdir/tests/do_tests_sim.in > $dstdir/do_tests_sim
+sed -f sedscript $srcdir/scripts/sdk/create_makefile.in > $dstdir/create_makefile
+sed -f sedscript $srcdir/scripts/lm/install_license.sh.in > $dstdir/install_license.sh
+
+if [ "$redhat" != "no" ]
+then
+sed -f sedscript $srcdir/scripts/lm/rh_mostd.sh.in > $dstdir/mostd.sh
+else
+sed -f sedscript $srcdir/scripts/lm/mostd.sh.in > $dstdir/mostd.sh
+fi
+
+sed -f sedscript $srcdir/scripts/validation/validate_rsm.in > $dstdir/validate_rsm
+sed -f sedscript $srcdir/scripts/validation/full_sesc_ro_rsm_validation.scr.in > $dstdir/full_sesc_ro_rsm_validation.scr 
+sed -f sedscript $srcdir/scripts/validation/validate_optimizers.in > $dstdir/validate_optimizers
+sed -f sedscript $srcdir/scripts/validation/meth_design_space.scr.in > $dstdir/meth_design_space.scr
+sed -f sedscript $srcdir/scripts/validation/mosa_validation.scr.in > $dstdir/mosa_validation.scr
+sed -f sedscript $srcdir/scripts/validation/nsgaii_validation.scr.in > $dstdir/nsgaii_validation.scr
+sed -f sedscript $srcdir/scripts/validation/respir_validation.scr.in > $dstdir/respir_validation.scr
+
+sed -f sedscript $srcdir/tests/xml/do_tests.in > $dstdir/do_tests.x
+sed -f sedscript $srcdir/tests/xml/multicube_design_space_test.xml.in > $dstdir/multicube_design_space_test.xml
+sed -f sedscript $srcdir/tests/xml/multicube_design_space_test_R1.4.xml.in > $dstdir/multicube_design_space_test_R1.4.xml
+sed -f sedscript $srcdir/tests/xml/multicube_design_space_test_err.xml.in > $dstdir/multicube_design_space_test_err.xml
+sed -f sedscript $srcdir/tests/xml/multicube_design_space_test_dump.xml.in > $dstdir/multicube_design_space_test_dump.xml
+
+if [ "$buildgpl" != "no" ]
+then
+sed -f sedscript $gplsrcdir/makefile.in > $dstdir/makefile.gpl
+fi
+
+if [ "$bi_gnuplot" != "no" ]
+then
+    touch $dstdir/build_gnuplot
+fi
+
+if [ "$buildrbf" != "no" ]
+then
+sed -f sedscript $srcdir/gpl/rbf/makefile.in > $dstdir/makefile.rbf
+fi
+
+if [ "$buildnn" != "no" ]
+then
+sed -f sedscript $srcdir/gpl/nn/makefile.in > $dstdir/makefile.nn
+fi
+
+if [ "$buildsplines" != "no" ]
+then
+sed -f sedscript $srcdir/gpl/splines/makefile.in > $dstdir/makefile.splines
+fi
+
+if [ "$usecases" != "no" ]
+then
+sed -f sedscript $srcdir/use_cases/2parma/hhi/memtrace_ds.xml.in > $dstdir/memtrace_ds.xml
+fi
+
+if [ "$parma" != "no" ]
+	then
+   	touch $dstdir/install_2parma
+	else
+	rm -f $dstdir/install_2parma
+fi
+
+sed -f sedscript $srcdir/scripts/legacy/m3_cdb.in > $dstdir/m3_cdb
+
+rm -f sedscript
+
+# =========================
+# Creation of config.status
+# =========================
+
+echo $0 $all_arg > $dstdir/config.status
+chmod +x $dstdir/config.status
+

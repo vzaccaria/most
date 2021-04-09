@@ -1,0 +1,6 @@
+doe_load_doe "st_full_search"
+opt_load_optimizer "st_parallel_doe"
+opt_tune "test"
+set db_report_conf_col_size = 100
+set db_report_metric_col_size = 10
+db_report "test"

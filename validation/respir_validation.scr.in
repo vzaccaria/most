@@ -1,0 +1,107 @@
+#
+#
+set tcad_dominance=true
+read_script "@bdir@/validation/meth_design_space.scr"
+
+set_procedure run_doe (dbname, doename)
+	doe_load_doe $doename
+	opt_load_optimizer "st_parallel_doe"
+	opt_tune $dbname
+done
+
+set_procedure compute_prediction(pname, srcname, rsmname)
+	if($rsmname=="linear")
+		db_train_rsm $pname --source=$srcname --model="LINEAR" --order=1 --interaction=true --preprocess="log" 
+	endif
+	if($rsmname=="shepard")
+		db_train_rsm $pname --source=$srcname --model="SHEPARD" --power=5 --preprocess="log" 
+	endif
+	if($rsmname=="nn")
+		doe_load_doe "st_full_search" 
+		db_train_rsm $pname  --source=$srcname --model="NN_ON_DOE" --effort="fast" --preprocess="log"	
+	endif
+	if($rsmname=="rbf")
+		doe_load_doe "st_full_search" 
+		db_train_rsm $pname --source=$srcname --model="RBF_ON_DOE" --type="power_log" --parameter=2 --preprocess="log"
+	endif
+done
+
+set_procedure simulate(rname, fname)
+	doe_load_doe "st_replicate"
+	set source_db = $rname
+	opt_tune $fname 
+done
+
+set_procedure methodology(final_pareto, doe_name, rsm_name, maxnsim)
+	set realistic_simulation_mode = true
+	set kernel_realistic_simulations = 0 
+	db_clear "F_0"
+	run_doe ("F_0", $doe_name)
+	set cov = 1
+	db_clear "F_1"
+	while (($cov > 0) & ($kernel_realistic_simulations<$maxnsim))
+		db_copy --attach=true "F_1" --destination="F_0"
+		show_vars
+		compute_prediction("R_0", "F_0", $rsm_name)
+		db_filter_pareto "R_0"
+		simulate("R_0", "F_1")
+		db_copy "F_0" --destination="p_F_0"
+		db_filter_pareto "p_F_0"
+		db_copy "F_1" --destination="p_F_1"
+		db_filter_pareto "p_F_1"
+		db_compute_coverage "p_F_0" --reference="p_F_1"
+		set cov = $?
+	done
+	db_filter_pareto "F_0" --valid=true
+	db_copy "F_0" --destination=$final_pareto
+	return $kernel_realistic_simulations
+done
+
+db_create "F_0"
+db_create "F_1"
+db_create "R_0"
+
+doe_load_doe "st_full_search"
+opt_load_optimizer "st_parallel_pareto_doe"
+opt_tune "real_pareto"
+db_filter_pareto "real_pareto" --valid=true
+
+# RSM NAMES: linear, shepard, nn, rbf
+# DOE NAMES: st_random, st_box_behnken, st_ccd_fc, st_full_factorial
+
+set rsms = { "linear", "shepard", "nn", "rbf" }
+set does = { "st_random", "st_box_behnken", "st_ccd_fc", "st_full_factorial" }
+
+#set rsms = { "linear" }
+set plot = { } 
+
+set num = 0
+set data = [ ] 
+set i = 0
+set random_doe_solutions_number = 100
+set samples = 3
+while($num < 15)
+	set ns = 0
+	while($ns < $samples)
+		foreach r in $rsms
+			foreach d in $does
+				if(($d == "st_random") | ($num == 0))
+					set simulated_points = methodology("meth_pareto", $d, $r, 2000)
+					db_compute_ADRS	"meth_pareto" --reference="real_pareto"
+					set adrs = $?
+					set name = $d+"_"+$r+"_"+$num
+					set plot = $plot + { [ [ $simulated_points ], [ $adrs ], $name ] }
+					set data@$i = [ $simulated_points, $adrs , $d, $r ] 
+					set i = $i + 1
+				endif
+			done
+		done
+		set ns = $ns + 1
+	done
+	set num = $num + 1
+	set random_doe_solutions_number = $random_doe_solutions_number + 100 
+done
+
+write_object $data --file_name="respir.obj.db"
+db_plot_vector $plot --monochrome=true --xaxis="Number of simulations" --yaxis="ADRS" --title="ReSPIR validation" --output="respir-ADRS-nsims" --onepage=true --size=3.0
+

@@ -1,0 +1,84 @@
+Information: Instantiating SESC driver - multiple scenarios
+Information: Assuming number_of_scenarios=1, please define it before loading the driver
+Information: Assigned value [ "2K", "64K" ] to ics_bounds
+Information: Assigned value [ "2K", "64K" ] to dcs_bounds
+Information: Assigned value [ "32K", "1M" ] to l2cs_bounds
+Information: Assigned value [ "1", "16" ] to icw_bounds
+Information: Assigned value [ "1", "16" ] to dcw_bounds
+Information: Assigned value [ "1", "16" ] to l2cw_bounds
+Information: Assigned value [ "1", "8" ] to iwidth_bounds
+Information: Assigned value [ "16", "128" ] to cbs_bounds
+Information: Assigned value [ "2", "16" ] to pn_bounds
+Information: Assigned value [ "ics", "dcs", "l2cs", "icw", "dcw", "l2cw", "iwidth", "cbs", "pn" ] to ds_parameters
+Information: Assigned value [ "total_energy_0", "total_delay_0" ] to metrics
+Information: Assigned value [ "2K", "2K" ] to ics_bounds
+Information: Assigned value [ "2K", "2K" ] to dcs_bounds
+Information: Assigned value [ "32K", "32K" ] to l2cs_bounds
+Information: Assigned value [ "2K", "2K" ] to dcs_bounds
+Information: Assigned value [ "1", "1" ] to icw_bounds
+Information: Assigned value [ "1", "1" ] to dcw_bounds
+Information: Assigned value [ "1", "1" ] to l2cw_bounds
+Information: Assigned value [ "1", "1" ] to iwidth_bounds
+Information: Assigned value [ "16", "16" ] to cbs_bounds
+Information: Assigned value [ "2", "2" ] to pn_bounds
+Information: Current optimizer has been set to 'Parallel DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Full search DoE'
+Information: Assigned value 1 to parallel_instances
+Information: Assigned value "fft.mips -m10" to sesc_command_line
+Information: Generating full search DoE
+Information: Assigned value 10 to parallel_doe_tempdb_granularity
+wattchify ./_sesc_configuration.0.0.cfg ./_sesc_w_configuration.0.0.cfg &> /dev/null
+cactify ./_sesc_w_configuration.0.0.cfg ./_sesc_wc_configuration.0.0.cfg &> /dev/null
+sesc.smp -c _sesc_wc_configuration.0.0.cfg -d _sesc_out.0.0 -f txt  fft.mips -m10 -p2 &> /dev/null
+rm _sesc*.0.0.* -f
+Information: Database 'FS' created
+Information: The current explorer analyzed 1 points
+Information: Writing the database to disk
+Information: Database correctly written
+Information: Assigned value 2 to number_of_scenarios
+Information: Instantiating SESC driver - multiple scenarios
+Information: Assigned value [ "2K", "64K" ] to ics_bounds
+Information: Assigned value [ "2K", "64K" ] to dcs_bounds
+Information: Assigned value [ "32K", "1M" ] to l2cs_bounds
+Information: Assigned value [ "1", "16" ] to icw_bounds
+Information: Assigned value [ "1", "16" ] to dcw_bounds
+Information: Assigned value [ "1", "16" ] to l2cw_bounds
+Information: Assigned value [ "1", "8" ] to iwidth_bounds
+Information: Assigned value [ "16", "128" ] to cbs_bounds
+Information: Assigned value [ "2", "16" ] to pn_bounds
+Information: Assigned value [ "ics", "dcs", "l2cs", "icw", "dcw", "l2cw", "iwidth", "cbs", "pn" ] to ds_parameters
+Information: Assigned value [ "total_energy_0", "total_delay_0", "total_energy_1", "total_delay_1" ] to metrics
+Information: Assigned value { "fft.mips -m10", "fft.mips -m14" } to sesc_command_lines
+Information: Assigned value [ "2K", "2K" ] to ics_bounds
+Information: Assigned value [ "2K", "2K" ] to dcs_bounds
+Information: Assigned value [ "32K", "32K" ] to l2cs_bounds
+Information: Assigned value [ "2K", "2K" ] to dcs_bounds
+Information: Assigned value [ "1", "1" ] to icw_bounds
+Information: Assigned value [ "1", "1" ] to dcw_bounds
+Information: Assigned value [ "1", "1" ] to l2cw_bounds
+Information: Assigned value [ "1", "1" ] to iwidth_bounds
+Information: Assigned value [ "16", "16" ] to cbs_bounds
+Information: Assigned value [ "2", "4" ] to pn_bounds
+Information: Clearing database root
+Information: Generating full search DoE
+wattchify ./_sesc_configuration.0.0.cfg ./_sesc_w_configuration.0.0.cfg &> /dev/null
+cactify ./_sesc_w_configuration.0.0.cfg ./_sesc_wc_configuration.0.0.cfg &> /dev/null
+sesc.smp -c _sesc_wc_configuration.0.0.cfg -d _sesc_out.0.0 -f txt  fft.mips -m10 -p2 &> /dev/null
+rm _sesc*.0.0.* -f
+wattchify ./_sesc_configuration.0.0.cfg ./_sesc_w_configuration.0.0.cfg &> /dev/null
+cactify ./_sesc_w_configuration.0.0.cfg ./_sesc_wc_configuration.0.0.cfg &> /dev/null
+sesc.smp -c _sesc_wc_configuration.0.0.cfg -d _sesc_out.0.0 -f txt  fft.mips -m14 -p2 &> /dev/null
+rm _sesc*.0.0.* -f
+wattchify ./_sesc_configuration.0.0.cfg ./_sesc_w_configuration.0.0.cfg &> /dev/null
+cactify ./_sesc_w_configuration.0.0.cfg ./_sesc_wc_configuration.0.0.cfg &> /dev/null
+sesc.smp -c _sesc_wc_configuration.0.0.cfg -d _sesc_out.0.0 -f txt  fft.mips -m10 -p4 &> /dev/null
+rm _sesc*.0.0.* -f
+wattchify ./_sesc_configuration.0.0.cfg ./_sesc_w_configuration.0.0.cfg &> /dev/null
+cactify ./_sesc_w_configuration.0.0.cfg ./_sesc_wc_configuration.0.0.cfg &> /dev/null
+sesc.smp -c _sesc_wc_configuration.0.0.cfg -d _sesc_out.0.0 -f txt  fft.mips -m14 -p4 &> /dev/null
+rm _sesc*.0.0.* -f
+Information: Database 'FS2' created
+Information: The current explorer analyzed 2 points
+Information: Writing the database to disk
+Information: Database correctly written
+Information: Exiting from MOST shell

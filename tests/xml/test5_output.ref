@@ -1,0 +1,22 @@
+Information: Creating the xml_driver
+Information: Loading the xml_driver
+
+Shell variables:
+Name                  Value      
+----------            ------------------------ 
+ds_parameters         [ "partest_1_1" "partest_1_2" "partest_2_1" "partest_2_2" "partest_3" "foo3" "foo4" "foo6" "foo7" "foo8" "foo9" "foo10" "foo11" "foo12" ]  
+foo3                  [ "value1" "value2" ]  
+foo4                  [ "512" "1024" ]  
+foo6                  [ "0" "1" ]  
+partest_1_1           [ "1" "2" ]  
+partest_1_2           [ "1" "2" ]  
+partest_2_1           [ "1" "5" ]  
+partest_2_2           [ "1" "5" ]  
+partest_3             [ "1" "2" ]  
+
+Databases in memory
+Name             size       
+-----------------------------
+root             (available)   0
+Information: Removing xml_driver
+Information: Exiting from Multicube Explorer shell

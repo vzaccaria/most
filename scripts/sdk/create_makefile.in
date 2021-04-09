@@ -1,0 +1,127 @@
+#!/bin/sh
+
+set -e
+
+
+# =======
+# Startup
+# =======
+
+
+# ==============
+# Default values
+# ==============
+
+srcdir=`pwd`
+dstdir=`pwd`
+
+othercflags=""
+gsl_include=`gsl-config --cflags`
+gsl_libs=`gsl-config --libs`
+suffix=""
+finst="no"
+
+# ==================
+# Diagnostic message
+# ==================
+
+othercxxflags="$gsl_include"
+
+image=@bdir@
+
+
+# ==================================
+# Process the command line arguments
+# ==================================
+
+all_arg=$*
+args=
+
+while :
+do
+# no args
+        case $# in
+	0)
+		break
+		;;
+	esac
+
+# get first arg and shuffle
+	option=$1
+	shift
+
+# make all options have two hyphens
+	orig_option=$option
+	case $option in
+		--*) ;;
+		-*) option=-$option ;;
+	esac
+
+# split the option to get its argument
+	case $option in
+	--*=*)
+		optarg=`echo $option | sed -e 's/^[^=]*=//'`
+		;;
+	*)
+		arg=$option
+	esac
+
+# process the options
+	case $option in
+
+	    --optimized) othercxxflags="$othercxxflags -O2";;
+
+	    --dbg)       othercxxflags="$othercxxflags -g";;
+	    
+	    --fdebpack)  finst="yes";;
+	    
+	    --suffix=*) suffix=".$optarg";;
+	    
+	    --image=*) 	  image="$optarg";;
+	    
+	    --help)
+	    echo "Error : unknown option $option"
+
+            echo "Usage: $0 [flags] source_file_name"
+            echo "flags:"
+            echo "	"
+            echo "--dbg                 Enable symbolic debugging"
+            echo "--optimized           Enables compile level optimization switches"
+            echo "--fdebpack            Forces the generation of the examples in the most installation directory"
+            echo "--suffix=<sfx>        Generates a makefile with suffix"
+            exit 1
+	esac
+done
+
+otherlinkflags="-L. $gsl_libs" ## Just in case LD_LIBRARY_PATH does not include current directory
+
+actual_position=$image
+
+if [ "$finst" != "no" ]
+then
+   srcdir=@bdir@/examples
+   dstdir=@bdir@/examples
+   image=@bdir@/examples
+fi
+
+cat << EOF > sedscript
+    s?@_srcdir@?$srcdir?g
+    s?@_dstdir@?$dstdir?g
+    s?@_image@?$image?g
+    s?@_othercflags@?$othercflags?g
+    s?@_othercxxflags@?$othercxxflags?g
+    s?@_otherlinkflags@?$otherlinkflags?g
+    s?@_object@?$arg?g
+EOF
+
+makefilename="makefile"$suffix
+
+if [ "x$arg" != "x" ]
+then
+   sed -f sedscript $actual_position/sdk/makefile.in > $makefilename
+else
+   echo "Please specify a valid source file name"
+fi
+
+rm sedscript
+

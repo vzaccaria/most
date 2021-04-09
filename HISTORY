@@ -1,0 +1,1058 @@
+#####################################################################################################
+# History file to be updated at each commit of a new snapshot                             	    #
+# Please indicate if any test fails.			       				  	    #
+#												    #
+# Warning, as of March 2011, tags (snapshots and releases) are under tags/stshell_mexp              #
+# Previously, tags were stored in tags/stshell                                                      #
+#												    #
+# Use the keyword snapshot_'date'_num for snapshots	      				  	    #
+# Use the keyword release_'num' for releases		      				  	    #
+# Then:                                                                                             #
+#                                                                                                   #
+# svn copy https://svn.ws.dei.polimi.it/multicube/branches/stshell/stshell_mexp \                   #
+#     https://svn.ws.dei.polimi.it/multicube/tags/stshell_mexp/..                                   #
+#												    #
+# The commit messages should contain as prefix the following suffixes:				    #
+# 												    #	
+# [COPY SNAPSHOT <keyword>] for snapshot copies							    # 
+# [COPY RELEASE  <keyword>] for release copies							    # 
+# [COPY BRANCH   <keyword>] for branch  creation						    #
+# [MERGED BACK FROM <keyword>] when reintegrating from another branch				    #
+#                                                                                                   #
+# Warning, the following lines are automatically parsed by the MOST build system to tag the build   #
+#                                                                                                   #
+# --											            #
+# Codename MOST											    #
+# Release 1.1  											    #
+#####################################################################################################
+
+snapshot_210400
+Initial import and fix errors with modern c++ compilers
+
+---
+Added inline-R
+Fixed a problem with anonymous function scopes; now they are closures around the local variables in
+the scope that defined it (either locally or globally).
+
+snapshot_120124_R1.1
+Updated db_filter_valid with --violating=true option
+Modified db_plot. Bidimensional plots of databases, when plotted by level, modify line color with level.
+Appropriate template files should be used to associate the linestyle to a gradient palette color for efficient reading of plots.
+Added override option to db_plot. It allows using an external file with additional plotting options.
+Added plevel option to db_plot. It allows plotting points by highlighting different levels.
+Added simulation path to points in the database. Add --show_path=true to db_report to show the path from a compliant database.
+Added -n option. Non interactive sessions stop as soon as there is a command fails or it fails to load the XML driver. 
+Added -j command options. It allows to create an independent session of MOST (copy the current dir and launch MOST into it).
+Sessions are named and a pid is attached.
+
+snapshot_120102_R1.1
+Completed anonymous functions.
+
+All tests pass.
+
+snapshot_111114_R1.1
+Introduced XML R1.4+
+Added initial functional features.
+
+release_1_0
+Solved problems with scripts for the installation on redhat.
+
+All tests pass.
+
+release_1_0rc1
+Corrected a problem with using signed scripts. 
+Candidate for 2PARMA prototype.
+
+All tests pass.
+
+release_1_0rc0
+Modified optimizers to accept pre-populated databases.
+Modified clustering.
+Added correlation analysis.
+Experimental Porting to gcc-4.5, Ubuntu 11.04.
+Fixed problems with pthreads and libXML.
+
+Test pass.
+
+release_1_0b2
+Refactoring of st_command to streamline error management.
+Integration with Multicube Explorer.
+Added signature check for official scripts. It bypasses license management. Useful for prototype scripts.
+Added XML export of operating points.
+Merged changes in R1.0b back in trunk (basically package creation files).
+As of March 29, 2011 release 1_0b can be considered final.
+
+All tests pass.
+
+release_1_0b
+This is a beta release. The final release will be in June 2011.
+Fixed some final issues with license management on RH 5.1
+Completed port on CentOS/Redhat 5.1
+Initial version of the automatically generated manual for commands and RSMs.
+Added small XML sdk to speed up integration of use cases.
+Added error checking for the generic driver.
+
+All tests pass.
+
+snapshot_290910_stshell_mexp
+Enabled specifications over multiple lines into the generic driver configuration file.
+Added the generic driver documentation.
+Fixed some problems with hanging MPI nodes after license-check fail.
+Modified some makefiles to set installation file rights.
+Preparing for the release. 
+
+
+All tests pass.
+
+
+snapshot_020710_stshell_mexp
+Modified license management.
+Linked HTML report to M3Explorer.
+Added DoEs from M3Explorer R1.0
+Updated XML driver
+Added db_import command.
+Added conversion utility from multicube explorer databases.
+
+All tests pass.
+
+snapshot_070510_stshell_mexp.
+Added the generic driver.
+Added regression tests for XML.
+Increased robustness of licenses (to be verified).
+
+All tests pass.
+
+snapshot_040510_stshell_mexp
+Merged with Stshell release 2.0. 
+Optimizers validated with respect to STShell 2.0. 
+NSGAII reported decresed accuracy. MOSA and Respir show similar behavior w.r.t. STShell.
+Restored examples, validation and regression scripts.
+
+All tests pass.
+
+snapshot_190409_stshell_mexp
+Improved security of license management. Added inspection utility.
+Added License Management.
+Added nsgaii optimizer.
+Changed binary name to most.
+Factored out gsl from the codebase.
+Some refactoring of test directories.
+Fixed XML driver to run with MPI.
+Added XML driver. 
+
+All tests pass. 
+
+snapshot_101109_stshell_mexp
+Now compiles MOSA.
+Sesc driver is correctly instantiated.
+
+All tests pass. Simulation tests with sesc pass.
+
+snapshot_030209_stshell_mexp
+Initial integration of the design space. Centralized random number generation.
+
+All tests pass.
+
+snapshot_020209
+Starting development branch for introducing changes from m3explorer.
+
+All tests pass.
+
+snapshot_070109
+Completed command manual functionality.
+Added get_level built in function.
+Added simulations and evaluation count number.
+
+All tests pass.
+
+snapshot_130708
+(* shold be 131008 *)
+Added neural networks and radial basis function RSMs.
+Fixed a problem regarding non-existing scripts.
+Fixed a problem when compiling for MACOSX.
+Fixed a problem regarding the metrics/objective cache of points passing through the job dispatcher
+Now the cache is cleared.
+Fixed a problem regarding shell invocation from within the sesc driver.
+Now BSD readline is the default lineediting library.
+
+All tests pass.
+
+snapshot_260708
+Added examples and optimizer example tests in the installation image.
+Added bin-dist target.
+Added a doe for random generation of permutations.
+Solved a bug in the get_build_path function and corrected some compile errors under Linux.
+
+All tests pass.
+
+
+snapshot_250608
+Introduced NSGAII Algorithm.
+
+All tests pass.
+
+snapshot_140408
+Merged with branch newmoo.
+The following changes have been introduced.
+Fixed a bug in command line completion for commands.
+Added create_makefile for SDK.
+Fixed a bug in ccd.
+Added tab completion for functions and procedures.
+Modified calls to normal distribution computation. Now it uses named pipes.
+Added companion metrics.
+Added update cache command.
+Added linear models for shell variables.
+Solved a bug in stack manipulation.
+Diversified the computation of dominance for violating points.
+Added some filtering functionality in the linear RSM.
+Added significance test to RSM.
+Fixed a bug in ast.
+Speed up of execution of procedures.
+Added database normalization command.
+Simplified memory management in local procedures. Fewer copies are done when managing local variables.
+Added initial statistics package.
+Extended error messages output.
+Added tests for procedures.
+Added multiple inclusion of files. Force interactive mode option.
+Added ".stshellrc" initialization file.
+Added printf function
+Added db_plot_vector
+Added source database for optimization.
+Added Linear regression
+Added syntax check at top-level.
+Added procedures.
+Added CCD and Box Behnken. 
+Improvements on progress output.
+Speed up of the objective computation.
+Added nice progress output.
+Removed current database. Now code should be more readable.
+Added replication DoE
+Added filter_valid function.
+Some changes in point access routines.
+Changed memory allocation pattern.
+Added functionals min, max, prod, sum
+Introduced bool type.
+Extended parser and function evaluation.
+Added level function.
+Extended parser.
+Added some color output to plot.
+Some changes to the parser.
+
+All tests pass.
+
+snapshot_190108
+Fixed a small circular bug.
+
+All tests pass.
+
+snapshot_180108
+Added power function.
+Added multiple-parameter built-in functions to the shell.
+Added change_element function to change elements of a vector and a map.
+
+All tests pass.
+
+snapshot_160108
+Added pretty and configurable database printing.
+Introduced basic constraint check in optimum computation and parallel_steepest_descent.
+Added check of generator strings.
+Added fractional factorial DoE. 
+Added neighborood DoE.
+Added consistency check for design space.
+Modified behavior of show optimum.
+Bug fix in db_report.
+Some changes into the sheperd RSM.
+
+All tests pass.
+
+snapshot_070108_1
+Added graphics file export in gnuplot.
+
+All tests pass.
+
+snapshot_070108
+Added --notermcap switch to configure.
+Added tab completion for db filenames and internal db names.
+
+All tests pass.
+
+snapshot_241207_1
+Added distribution file creation.
+
+All tests pass.
+
+snapshot_241207
+Fixed a bug in the file-name completion.
+
+All tests pass.
+
+snapshot_211207
+Added extended command line completion"
+
+All tests pass.
+
+snapshot_201207_2
+Added and changed Shepard's RSM.
+Refactored code in opt and sim modules.
+Added methods for checking consistency of points within the database and for accessing metrics.
+
+All tests pass.
+
+snapshot_201207_1
+Added general consistency check on pareto_metrics, metrics and stats used within the shell.
+
+All tests pass.
+
+snapshot_201207
+Modified steepest descent to compute the real cost function when optimizing.
+
+All tests pass.
+
+snapshot_181207_1
+Added steepest descent algorithm for optimization of single objective functions.
+
+All tests pass.
+
+snapshot_181207
+Cleaned up trunk.
+
+All tests pass.
+
+snapshot_141207
+Changed names to some drivers.
+
+All tests pass.
+
+snapshot_241107
+Fixed a small bug related to --image option and tests in configure.
+
+All tests pass.
+
+snapshot_231107
+Modified readline library handling in configure and makefile.
+
+All tests pass.
+
+snapshot_221107_2
+Modified invocation of bison. Now it should be portable.
+Tested on both Linux and Mac.
+
+All tests pass.
+
+snapshot_221107_1
+Merged -r 456:562 stshell_doe.
+Added DoE Plugin Framework. Full search, random and fractional factorial are now DoE plugins.
+Added license to all source files.
+Removed free in place of real destructors.
+Code cleanup.
+Updated documentation to match doe and rsm functionality.
+Small fix to output message.
+Added stubs for RSM modeling. Only a linear model stub has been inserted.
+parallel_doe now creates its own database, which can be different from root.
+Added kmeans clustering algorithm. 
+Added db_filter_cluster for filtering clusters.
+Converted full factorial in full search DoE.
+Clustering data can be saved and retrieved from disc.
+Removed begin_map, end_map markers for creating maps. Now (*, *) should be used instead.
+Converted fractional factorial into Uniform Sampler.
+Removed old redundant optimizers. New DoE based optimizers in place.
+
+All tests pass.
+
+snapshot_221107
+Added test for testing optimum cost function computation.
+Added metrics ranks to computation of the cost function.
+Modified nightly build script for autocleaning after 7 days.
+Added core file removal in sesc driver.
+
+snapshot_081107
+Fixed a bug in reading database with errors.
+
+All tests pass.
+
+snapshot_031107_3
+Changed sim test.
+Fixed a problem with 'or' operators in the shell.
+
+All tests pass.
+
+snapshot_031107_2
+Added get_points_list and get_points_vector to extract points from a db.
+Now points can be analyzed from the shell.
+
+All tests pass.
+
+snapshot_031107_1
+Modified simulator test scripts.
+Changed a line output in sesc driver.
+Created nightly build script. Actually it is localized for my account.
+
+All tests pass.
+Simulator tests pass.
+
+snapshot_031107
+Test on sesc work.
+Added test on stshell-wattch interaction.
+Changed wattch and sesc drivers to support robust optimization.
+Fixed a bug in the MPI servers code.
+Fixed a bug in st_opt_utils. 
+Corrected a bug in st_point.
+Added some cleanup code.
+
+All tests pass.
+
+
+release_1_5
+Updated doc section to reflect grammar changes.
+Changed script1-3.scr in order to reflect grammar changes.
+Added arithmetic between doubles and strings.
+Release tested on linux and macos platforms. 
+
+All tests pass.
+
+snapshot_241001
+Added attach method to database. Added attach option to db_copy.
+
+All tests pass.
+
+snapshot_191001
+Added compute pareto function for n levels.
+Added some time display information.
+Some bug fixing due to cluster misbehavior.
+
+All tests pass.
+
+snapshot_171007_1
+Now works on DEI cluster.
+Changes to makefile and configure.
+
+All tests pass.
+
+snapshot_171007
+Changed sesc driver to report an error for limit conditions in Cacti.
+Introduced verbose variable to inhibit messages to the console.
+
+All tests pass.
+
+snapshot_151007
+Added shell functions to get database point list in a foreach statement.
+Added shell functions to get upper and lower bounds of the driver in shell expressions.
+Modified sesc driver.
+
+All tests pass.
+
+snapshot_131007
+Added cntrlc handling. Now it can be used for interrupting an exploration but not for exiting
+the shell.
+Added time option to the stshell command. 
+
+All tests pass.
+
+snapshot_121007_2
+Fixed some compiler bug under multi-cluster environment.
+
+All tests pass.
+
+snapshot_121007_1
+Added MPI functionality.
+Added a check on the maximum parseable size for MPI messages related to shell variables.
+Modified the test on the db generated by the parallel driver.
+Added a test on the db generated by the parallel driver.
+
+All tests pass.
+
+snapshot_121007
+Merged with snapshot_121007_branch_stshell_new_shell
+Added some mixing fclose in the st_tokens.ll file.
+Fixed a bug in the estimate command.
+Added functionality for bridging with modeFrontier.
+Modified scripts for demo.
+Modified export command to add an option for exporting to mode_frontier.
+Added custom function definition and call in the parser.
+Added 'properties' function to be used in shell expressions to fetch properties of an object
+in the form of a st_map.
+Added estimate command for estimating just one point. The point is
+not saved in the database.
+Added output redirection to the echo command.
+Introduced exceptions in the program.
+Now, exceptions are managed in the high-level parser loop.
+Eventually a command fails, but shell stays up.
+Added error codes to generated points. 
+Solved a bug in db_plot.
+Solved a bug in drv_load_driver.
+Added completion of options on the command line. Now the command line completion recognizes:
+- Variables, if starting with $
+- Options, if starting with --
+- Commands, if starting at the beginning of the line
+Modified the help structure of the commands. Now options can be given to commands 
+and be retrieved semi-automatically by some access functions.
+Modified the grammar of the shell since it was creating some strange parser hooks. 
+Added separation strings in vectors and lists. This is to avoid ambiguous cases in
+which for example you have { 2 +2 } which you dont know if it's a list of 1 (expression) or
+two elements. Now { 2 +2 } is interpreted as 1 only element list.
+If you want to achieve the same result as before, you must use { 2, +2 }.
+Same for the vector. Points and maps dont need this kind of treatment since it is not ambiguous for
+them.
+Changed database read/write functions to match with the extended vector syntax.
+
+All tests pass.
+
+snapshot_071007
+Corrected a compile bug under UBUNTU.
+
+All tests pass.
+
+
+release_1_2
+Changed behavior of the shell completion function.
+
+All tests pass.
+
+snapshot_041007_2
+Removed deprecated function usage in wattch and sesc drivers.
+Refactored some code from uniform sampler.
+
+All tests pass.
+
+snapshot_041007_1
+Compiles under linux.
+Added readline interface to the shell.
+
+All tests pass.
+
+snapshot_041007
+Added temporary db save in parallel_full_search.
+
+All tests pass.
+
+snapshot_290907
+Added export functionality vs. modeFrontier.
+
+All tests pass.
+
+snapshot_280907
+Fixed a bug in the export command.
+Corrected some error in the scripts.
+Added demo scripts.
+Enlarged size of line read in st_database.read_from_file.
+
+All tests pass.
+
+snapshot_210907_2
+Added arithmetic on lists (+ operator to concatenate).
+Added arithmetic on maps (@ operator to index).
+Factored some common code in the drivers.
+
+All tests pass.
+
+snapshot_210907_1
+Added a parallel version of the full search.
+Removed some redundant checks in the sesc driver.
+Added array boundary check.
+
+All tests pass.
+
+snapshot_210907
+Added some parser test.
+Modified sesc driverin order to correctly be instantiated multiple times.
+Modified tests that were not passing in the previous snapshot.
+Modified the makefile for linux.
+Modified all drivers except sesc to be parallelized.
+Modified all optimizers to use job dispatcher.
+Added instantiation code for the job dispatcher.
+Added pthread-based parallel job dispatcher. To be tested.
+Added sesc driver.
+
+All tests pass.
+
+snapshot_200907
+Fixed some bug.
+Modified instantiation time of the driver. Back to the origin.
+Fixed a bug in the evaluation of search_path.
+Added serialization/deserialization functions.
+
+All tests pass.
+
+release_1_0
+Official release 1.0 of STShell. 
+
+All tests pass.
+
+snapshot_170907
+Fixed some errors in the documentation.
+Added a method for reading points from a string in st_parser.
+Added some check in the evaluation of st_ast.
+Added regex free section to st_database.read_from_file.
+
+All tests pass.
+
+snapshot_130907_1
+Changed parser options. No more "--" allowed as parameters to commands, since they are interpreted
+as expressions.
+Changed database class. Introduced a method for reading a database from disk.
+This method is no more based on the parser (which was causing strange errors in complex scripts).
+Added a test that reads and writes a database from disk in order to check for inconsistencies.
+
+All tests pass.
+
+snapshot_130907
+Changed parser to correctly read positive and negative numbers.
+Changed some output messages.
+Modified the documentation to reflect the changes.
+
+All tests pass.
+
+snapshot_120907
+Introduced drv_load_driver and drv_load_optimizer.
+Some small bug fixed.
+
+All tests pass.
+
+snapshot_090907
+Added vector indexing to expression arithmetic. Now vectors elements can 
+be referenced in expressions.
+
+All tests pass.
+
+snapshot_070907_2
+Really bad functions in the wattch driver rewritten..
+Now the wattch driver is able to read effectively from the result file.
+
+All tests pass.
+
+
+snapshot_070907_1
+Extended string arithmetic. Now integers can be added to strings.
+Useful for constructing database names..
+Changed log-in message to include MULTICUBE framework.
+
+All tests pass.
+
+snapshot_070907
+Added limited string arithmetic between variables. Only "+" operator is allowed at
+the moment.
+Removed "apply pareto principle" command, not used.
+Introduced Uniform Sampler optimization algorithm by Gianluca.
+
+snapshot_140807
+Added db_copy command.
+
+All tests pass.
+
+snapshot_110807
+Added median euclidean distance computation in st_sim_utils.
+Fixed a memory leak in st_sim_utils.
+Fixed a bug in st_database.
+
+All tests pass.
+
+snapshot_100807
+Fixed a memory leak in st_database.
+Fixed a memory leak in st_sim_utils.
+Fixed a possible small memory leak in st_vector.
+
+All tests pass.
+
+snapshot_090807
+Fixed a memory leak in MOSA.
+Added db_compute_distance for computing euclidean distance between sets.
+Modified speed update functions for PSO.
+Modified PSO algorithm to collect PSO points only from gbest archive.
+Added probability of accepting gbest solution.
+Changed speed update function in MOPSO.
+Added speed initialization code in MOPSO.
+
+All tests pass.
+
+snapshot_080807
+Solved some memory leak. However more exists.. 
+Modified gbest function in mopso algorithm.
+Solved some bug in mopso algorithm.
+
+All tests pass.
+
+snapshot_070807
+Added Multi-objective Particle Swarm Optimizer.
+
+All tests pass.
+
+snapshot_050807
+Changed the pareto random search algorithm. Now it is no more 'exclusive'. 
+Exclusivity based random search will be introduced in another algorithm.
+
+All tests pass.
+
+snapshot_040807
+Changed underlaying database structure to be faster during searches. Now it uses
+RB tree from STL which offers log(N) speed during searches.
+Removed "remove_duplicates" since it is automatically done by the tree structure.
+
+All tests pass.
+
+snapshot_020807
+Fixed some warning at compile time. Changed reporting of 'db_show_optimum'.
+
+All tests pass.
+
+snapshot_310707_1
+Added libst_aprs optimizer. It is a window based mechanism which is simliar to SA.
+The optimizer generates a random point which is convexly summed to the current point
+based on the window value (0<=x<=1).
+
+All tests pass.
+
+snapshot_310707
+Solved a bug in the 'apply_pareto_principle' function.
+
+All tests pass.
+
+snapshot_300707
+Added 'db_merge_for_ro' command for merging databases. It is useful for creating
+databases fo robust optimization.
+
+All tests pass.
+
+snapshot_280707
+Added 'use_multiple_databases' option to the wattch_ro driver. Allows for 
+using a single multiple scenarios database or several distinct databases
+for multiple scenarios searches.
+
+All tests pass.
+
+snapshot_270707
+Added wattch robust optimization driver.
+This driver is designed to work with a set of databases already
+loaded in memory which represent available data on the specific scenarios 
+to be optimized. It does'nt work correctly if data is not present in the
+databases. I.e. it does'nt launch any simulation, just returns a NULL point.
+This is something to be updated in the future but now we need a shortcut 
+for the Date08 paper.
+
+All tests pass.
+
+snapshot_250707_1
+Modified optimizers in order to manage the case in which the driver returns NULL,
+which can be given by a violated constraint of the problem (like DTLZ7 or Wattch).
+
+All tests pass.
+
+snapshot_250707
+Added wattch driver to the drivers list. To be validated.
+
+All tests pass.
+
+snapshot_240707
+Added db_remove_duplicates for removing duplicates from databases. Duplicates can 
+happen when performing a stochastic search and, in some cases, can increase considerably
+the size of the database.
+
+All tests pass.
+
+snapshot_220707_2
+Added db_create command for creating new empty databases in the shell. These new
+databases may be populated with a db_read command. 
+Small changes to the command parser; now it gives an error for unidentified commands.
+
+All tests pass.
+
+snapshot_220707_1
+A very bad bug in the DTLZ coding. Now functions are effectively those described in the
+literature.
+
+All tests pass.
+
+snapshot_220707
+Added runtime discretization to dtlz problem. Now it is possible to specify a maximum number
+of solutions for which the parameter space should be discretized. Useful for computing 
+Pareto measures like coverage and ADRS in a feasible time.
+
+All tests pass.
+
+snapshot_210707_1
+Some small modifications to the dtlz. Added plain full search without construction
+of the pareto curve. 
+
+All tests pass.
+
+snapshot_210707
+Added driver which models the Multi-Objective test suite DTLZ. Validation tests in progress.
+
+All tests pass.
+
+snapshot_200707_2
+Refactored some function in st_sim_utils.cc. Rewrote some part of 'sim_is_strictly_dominated'
+function. Now it is readable!
+
+All tests pass.
+
+snapshot_200707_1
+Small modification to the functionality of db_apply_pareto_principle. Points which 
+are selected to be conformant to the principle are deleted from the current database.
+
+All tests pass.
+
+snapshot_200707
+Added 'db_apply_pareto_principle' command. Basically, it allows to apply the Pareto principle
+20% cause, 80% effects on the pareto curve to filter out results. Percentages can be changed on
+the command line. It is a useful tool for reducing the size of the pareto curve.
+
+All tests pass.
+
+snapshot_190707
+Added db_compute_ADRS for computing the Average Distance from Reference Set given
+two databases (one should be the result of the full search pareto). Added some new
+examples to the developer manual but it needs more work.
+
+All tests pass.
+
+snapshot_180707
+Removed 'estimate' function from the driver since it is now obsolete. Begun to work on the
+stshell developer manual and added a figure from the paper about STShell.
+
+All tests pass.
+
+snapshot_160707_2
+Added 'foreach' control structure to the language. See test7.scr for the usage.
+Added 'help command' feature for displaying the help for a specific command (to be extended :-)).
+
+All tests pass.
+
+snapshot_160707_1
+Solved a small bug in the command parsing. Added a script for comparing pure random search
+with the other algorithms.
+
+All tests pass.
+
+snapshot_160707
+Added '*' and '/' operators to expressions. Added db-report --size option (returns size in $?).
+Added some interesting scripts to compare MOSA and MPSA (metric used is (1-coverage)*pareto_points)).
+
+All tests pass.
+
+snapshot_150707_2
+Added return variable for commands. Now, each command execution result is stored into
+a $? variable which is accessible just after the command as in normal shells.
+This is useful when computing the coverage or executing opt_tune to store information
+into some variable. Warning. All the commands should be updated in order to generate
+this variable.
+
+All tests pass.
+
+snapshot_150707_1
+Added if-then-else, changed some small syntactic rules. Added a test on if-then-else.
+
+All tests pass.
+
+snapshot_150707
+Modified the explore interface. Now each algorithm returns the number of
+points simulated in the process as a metric for their complexity.
+
+All tests pass.
+
+snapshot_140707
+Refactored root_database update. Now it's up to the driver to update the root
+database. The optimizers can have multiple set of internal databases to be updated
+but they don't care about the root_database now.
+
+All tests pass.
+
+snapshot_130707
+Introduced the new parser with nested control structures. Scripting capability 
+dramatically improved. Added a test for control structures.
+Some other constructs should be added like if-then-else and for but 
+this is straightforward given the new parser structure.
+
+All tests pass.
+
+snapshot_100707_1
+Corrected another bug in the parser, now db_insert_point really works.
+Inserted a test for reading and writing databases.
+
+All tests pass.
+
+snapshot_100707
+Corrected a bug in the parser. Now db_insert_point works.
+
+All tests pass.
+
+snapshot_090707_3
+Added db_compute_coverage command to the shell. Now pareto databases can be compared
+at runtime with this metric.
+
+All tests pass.
+
+snapshot_090707_2
+Refactored flat uniform distribution computation from the optimizers. Now it is a single function.
+
+All tests pass.
+
+snapshot_090707_1
+Corrected some bugs in the computation of random indexes in the pareto search algorithms.
+
+All tests pass.
+
+snapshot_090707
+Added gsl library function calls in replacement of old rand() calls.
+Now the random number generators are configurable by environment variables (see GSL manual).
+MOSA now uses a poisson distribution to move between neighborhood points.
+
+All tests pass.
+
+snapshot_080707_1
+Added db_plot command for plotting in 2d and 3d dimensions with Gnuplot.
+Plots both the entire database as well as the pareto points.
+
+All tests pass. 
+
+snapshot_080707
+Speed up in the search of the pareto curve.
+
+All tests pass.
+
+snapshot_070707_2
+Added multiple databases and the ability to change between them.
+Algorithms can insert new databases as the result of their search while
+root_database is always updated.
+
+All tests pass.
+
+snapshot_070707_1
+Added operator = to the st_point and st_object classes.
+
+All tests pass.
+
+snapshot_070707
+Added dominance based simulated annealing from Smith et al.
+
+All tests pass.
+
+snapshot_050707
+Completely rewritten from scratch Pareto Simulated Annealing.
+Refactored functions for computing pareto curves, slightly slower but more elegant.
+
+All tests pass.
+
+snapshot_040707
+Added st_shell_variables class. Removed all 'C' like calls like get_integer etc.
+Now the user is notified every time a variable is defined by the driver or the optimizer.
+
+All tests pass.
+
+snapshot_030707_6
+Added comments to the script parsing routines
+
+All tests pass.
+
+------------------------
+MULTICUBE EXPLORER START
+------------------------
+
+snapshot_030707_5
+Working version on linux and macosx platform.
+
+All tests pass on all platforms.
+
+snapshot_030707_4
+Modified linux shared library compile flags. 
+Shared object creation should work now also under Linux.
+
+snapshot_030707_3
+Correct generation of file header when exporting a db.
+
+All tests pass.
+
+snapshot_030707_2
+Improved speed of db_filter_pareto
+
+snapshot_030707_1
+Added automatic generation of __STSHELL_VERSION__ define
+
+All tests pass.
+
+snapshot_030707
+Added some additional regression test
+
+All tests pass.
+
+snapshot_020707_3
+Added export command to stshell. 
+
+snapshot_020707_2
+Some output change when computing the pareto set.
+
+snapshot_020707_1
+Some speedup in recomputing the pareto curve with the command line db_filter_pareto
+
+snapshot_020707
+Some speedup in recomputing pareto with a new point.
+
+All tests pass.
+
+snapshot_010707
+Removed st_list iterator and changed pareto tuning algorithms to
+use list erase instead of list remove (much faster).
+
+All tests pass.
+
+snapshot_300607
+Rewrote completely the parser and st_commands; Now commands can be
+easily added without changing the parser. A simple online help
+is now available.
+
+All tests pass.
+
+
+snapshot_270607_2
+Changed simulation result from integer to enum, for better reading
+
+All tests pass.
+
+snapshot_270607_1
+Removed some useless funcitons in st_object_utils.
+
+All tests pass.
+
+snapshot_270607
+Eliminated duplicate functions in st_sim_utils.cc
+
+All tests pass.
+
+snapshot_260607_2
+Merged common functions in driver and optimizer into a single common utils file
+
+All tests pass.
+
+snapshot_260607_1
+Added test_driver and another test.
+
+All tests pass.
+
+snapshot_260607
+Added some regression test facility.
+
+All test pass.
+
+snapshot_250607_2
+Some style modifications to the optimizers.
+
+snapshot_250607_1
+Changed optimizer API from optimize to explore.
+
+snapshot_250607
+Some style modification and changes to the API of optimizer and driver.
+
+snapshot_230607_3
+Added compile flags for generating shared modules under Darwin. These
+modules can be opened by dlopen() exactly the same as Linux.
+
+snapshot_230607_2
+Added argument parsing to stshell
+
+snapshot_230607_1
+Added scripts to the compilation process
+
+snapshot_230607
+Added optimizers to the compilation process
+
+snapshot_220607
+Working version of stshell

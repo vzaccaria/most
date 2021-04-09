@@ -1,0 +1,14 @@
+opt_load_optimizer "st_parallel_pareto_doe"
+doe_load_doe "st_full_search"
+
+set ics = [ "1","8" ]
+set ibs = [ "8","256" ]
+set iw = [ "1","16" ]
+
+set max_total_area = 200.0
+set min_total_area = 50.0
+set visited_solution = "full_solution.db"
+set metric1 = "total_energy"
+set metric2 = "total_delay"
+
+

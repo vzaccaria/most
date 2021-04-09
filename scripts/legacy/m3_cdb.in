@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+cat $1 | @bdir@/bin/m3_convert > $1.mt.db
+

@@ -1,0 +1,107 @@
+set_procedure create_empty_vector(n, init)
+        set_local i=0
+        set_local v = []
+        while($i<$n)
+            set_local v@$i = $init
+            set_local i = $i+1
+        done
+        return $v 
+done
+
+set_procedure get_column(input, ncol)
+	set_local v = []
+	set_local i = 0
+	while($i < size($input))
+		set_local v@$i = ($input@$i)@$ncol
+		set_local i = $i + 1
+	done
+	return $v
+done
+
+set_procedure get_metrics_matrix_from_db(db)
+	set_local v = []
+	set_local i = 0
+	foreach p in get_points($db)
+		if(is_valid($p))
+			set_local v@$i = metrics($p)
+			set_local i = $i+1
+		endif
+	done	
+	return $v
+done
+
+set_procedure get_objectives_matrix_from_db(db)
+	set_local v = []
+	set_local i = 0
+	foreach p in get_points($db)
+		if(is_valid($p))
+			set_local v@$i = objectives($p)
+			set_local i = $i+1
+		endif
+	done	
+	return $v
+done
+
+set_function string(x) = ""+$x
+
+
+set_procedure is_dominated(a, ref)
+	if(size($a)!=size($ref))
+	   return false
+	endif
+	set_local i=0
+	set_local ref_no_worse_than_a = true 
+	set_local ref_once_better_than_a = false 
+	while($i<size($a))
+		if($a@$i < $ref@$i)
+			set_local ref_no_worse_than_a = false
+		endif
+		if($a@$i > $ref@$i)
+			set_local ref_once_better_than_a = true
+		endif
+		set_local i = $i+1
+	done
+	if($ref_no_worse_than_a & $ref_once_better_than_a)
+		return true
+	else
+		return false
+	endif
+done
+
+set_procedure filter_dominated(vect)
+	set_local i=0
+	set_local d = []
+
+	while($i<size($vect))
+		set_local d@$i = 0
+		set_local i = $i+1
+	done
+
+	set_local i = 0
+	while($i<size($vect))
+		set_local j=0
+		while($j<size($vect))
+			set_local a = $vect@$i
+			set_local ref = $vect@$j
+			if(is_dominated($a, $ref))
+				set_local d@$i = 1
+			endif
+			set_local j = $j + 1
+		done
+		set_local i = $i + 1
+	done
+	echo $d
+	set_local res = [ ] 
+	set_local i = 0
+	set_local n = 0
+	while($i<size($vect))
+		if($d@$i == 0)	
+			set_local res@$n = $vect@$i
+			set_local n = $n + 1
+		endif
+		set_local i = $i + 1
+	done	
+	return $res
+done
+
+echo "Initialization: STShell 'basic' pack read."

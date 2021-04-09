@@ -1,0 +1,42 @@
+% Copyright 2007 by Till Tantau
+%
+% Modified in 2009 by Patrick Bellasi
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+
+\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/color/beamercolorthemewhale.sty,v 1.4 2007/01/28 20:48:24 tantau Exp $
+
+
+\mode<presentation>
+
+%\definecolor{basecolor}{RGB}{249,202,14}  % yellow
+%\definecolor{basecolor}{RGB}{98,189,25}   % green
+\definecolor{basecolor}{RGB}{29,171,237}   % lightblue
+\definecolor{darkgrey}{RGB}{46,52,54}
+
+
+\setbeamercolor*{palette primary}{fg=white,bg=basecolor}
+\setbeamercolor*{palette secondary}{fg=basecolor,bg=darkgrey}
+\setbeamercolor*{palette tertiary}{fg=white,bg=basecolor}
+\setbeamercolor*{palette quaternary}{fg=white,bg=darkgrey}
+
+\setbeamercolor*{sidebar}{use=structure,bg=basecolor}
+  
+\setbeamercolor*{palette sidebar primary}{use=structure,fg=basecolor}
+\setbeamercolor*{palette sidebar secondary}{fg=white}
+\setbeamercolor*{palette sidebar tertiary}{use=structure,fg=basecolor}
+\setbeamercolor*{palette sidebar quaternary}{fg=white}
+
+\setbeamercolor*{titlelike}{parent=palette primary}
+\setbeamercolor*{frametitle}{parent=palette primary}
+\setbeamercolor*{part title}{parent=palette primary}
+\setbeamercolor*{item}{fg=basecolor}
+\setbeamercolor*{alerted text}{fg=basecolor}
+
+\mode<all>

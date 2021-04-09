@@ -1,0 +1,7 @@
+Update Feb. 2022 - Not needing boost anymore
+
+obsolete:
+---
+
+In order to compile this file you should have installed the BOOST library into a suitable directory <dir>.
+You should also create a link <dir>/include/boost to <dir>/include/boost_VERSION/boost.

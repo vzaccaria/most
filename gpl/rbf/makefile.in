@@ -1,0 +1,98 @@
+# Makefile for RBF components 
+# 
+# (C) 2007, Politecnico di Milano and V. Zaccaria
+
+DSTDIR = @dstdir@
+SRCDIR = @srcdir@/gpl/rbf
+INCDIR = @srcdir@/gpl/rbf
+XDRDIR = @xdrsrcdir@
+BOOSTDIR = @boostdir@
+OTHERCFLAGS = @othercflags@
+OTHERCXXFLAGS = @othergplcxxflags@
+OTHERLINKFLAGS = @othergpllinkflags@ -L$(BOOSTDIR)/lib
+IMAGE = @image@
+STATIC = @static@
+
+CXX=g++
+MPICXX=mpic++
+AR=ar cr
+RANLIB=ranlib
+SHLIB_LD=g++ -fPIC
+CFLAGS= $(OTHERCFLAGS) -I$(INCDIR) -I$(XDRDIR) -I$(BOOSTDIR)/include
+CXXFLAGS= $(OTHERCXXFLAGS) -I$(INCDIR) -I$(XDRDIR) -I$(BOOSTDIR)/include
+
+OS_NAME = $(shell uname -s)
+
+ifeq ("$(OS_NAME)", "SunOS")
+CXXFLAGS += -D__SOLARIS__
+CXXSOFLAGS = -shared -fPIC 
+endif
+
+ifeq ("$(OS_NAME)", "Darwin")
+CXXFLAGS += -g -D__MAC_OSX__
+CXXSOFLAGS = -fno-common -bundle -flat_namespace -undefined suppress
+OTHERLINKFLAGS += $(READLINEDIRLIBFLAGS) 
+endif
+
+ifeq ("$(OS_NAME)", "Linux")
+CXXFLAGS += 
+CXXSOFLAGS = -g -shared -fPIC 
+OTHERLINKFLAGS += $(READLINEDIRLIBFLAGS) -lpthread -ldl -Wl,-export-dynamic -lpthread
+endif
+
+#####################################
+#     CREATE SYMBOLIC TARGETS       #
+#####################################
+
+RBF_TARGETS = bvp.o diff_op.o interpolator.o linalg.o utils.o ddm.o error.o func.o rbf.o
+
+# Binary targets are estimatorRBF.cpp interpolatorRBF.cpp trainerRBF.cpp
+
+RBF_INCLUDES = bvp.hpp  ddm.hpp  diff_op.hpp  error.hpp  func.hpp  interpolator.hpp  linalg.hpp  rbf.hpp  utils.hpp
+
+XDR_TARGETS = gpl_xdr_api.o 
+XDR_INCLUDES = gpl_xdr_api.h
+
+XDR_INCDIR_INCLUDES = $(patsubst %.h, $(XDRDIR)/%.h, $(XDR_INCLUDES))
+RBF_INCDIR_INCLUDES = $(patsubst %.h, $(INCDIR)/%.h, $(RBF_INCLUDES))
+
+# Tells make to search for sources into SRCDIR and above.
+VPATH=$(SRCDIR):$(SRCDIR)/..
+
+
+#####################################
+#     CREATE BUILD TARGETS          #
+#####################################
+
+all: rbf_interpolator
+
+#############################
+#       ENGINE BUILD	    #
+#############################
+
+rbf_interpolator: $(RBF_TARGETS) $(XDR_TARGETS) interpolatorRBF.o
+	$(CXX) $(STATIC) $^ -o $@ $(OTHERLINKFLAGS)
+
+%.o: %.cpp $(XDR_INCDIR_INCLUDES) $(RBF_INCDIR_INCLUDES)
+	$(CXX) -c  $< -o $@ $(CXXFLAGS) 
+
+#############################
+#       CLEAN BUILD	    #
+#############################
+
+clean:
+	rm -f *.o rbf_estimator rbf_interpolator rbf_trainer *.cc *.h *.so
+
+#############################
+#      INSTALL BUILD	    #
+#############################
+
+BINR=555
+OTHR=444
+
+install: all 
+	@mkdir -p $(IMAGE)
+	@mkdir -p $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/rbf_interpolator $(IMAGE)/gpl
+
+

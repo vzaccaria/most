@@ -1,0 +1,45 @@
+#!/bin/sh
+# This is a very rudimental script for running custom regression tests on the most 
+# platform. Every test has its own piece of code for executing it and outputting
+# the result which is of the form PASSED, NOT PASSED. So far there is no support 
+# for creating tests in a simpler way (i.e. through a configuration file).
+# Keep in mind that this is processed by configure to setup destination directory
+# variables.
+# This file should test the executable which is in the @bdir@/bin directory
+# with whatever driver/optimizer needed.
+# Reference test files should be put in the directory tests with a name like testX_output.ref
+# and be compared with the actual output of the most which should be put in testX_output.
+# 
+# Note that diffing simulator outputs can be really nasty, even on the same machine since
+# boundary conditions when ref files were generated are inherently different from 
+# those when simulation is run.
+#
+# Author: Vittorio Zaccaria, zaccaria@elet.polimi.it 2007
+#
+
+
+# Test number 2
+#
+# Test the interaction with wattch simulator 
+cp @srcdir@/tests/test_sim_1/fft.mips .
+@bdir@/bin/most -S -f @bdir@/tests/test_sim_1/test_sesc.scr > test_sesc_out
+diff test_sesc_out @bdir@/tests/test_sim_1/test_sesc_out.ref > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test sesc_execution:       NOT PASSED"
+else
+	echo "Test sesc_execution:       PASSED"
+fi
+
+diff f1.db @bdir@/tests/test_sim_1/f1.db > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test sesc_db_1:            NOT PASSED"
+else
+	echo "Test sesc_db_1:            PASSED"
+fi
+
+diff f2.db @bdir@/tests/test_sim_1/f2.db > tmp
+if [ "$?" -ne 0 ]; then 
+	echo "Test sesc_db_2:            NOT PASSED"
+else
+	echo "Test sesc_db_2:            PASSED"
+fi

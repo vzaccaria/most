@@ -1,0 +1,25 @@
+# This is a test script
+drv_load_driver "st_test"
+set pareto_metrics = { "M1","M2","M3" }
+
+opt_load_optimizer "st_parallel_pareto_doe"
+doe_load_doe "st_full_search"
+
+set a = 0 
+
+while ($a < 10)
+ set a = $a + 1
+done
+
+if($a <= 11)
+   echo "A is less than 11";
+endif
+
+set a = 20
+
+if($a <= 11)
+   echo "A is less than 11";
+else
+   echo "A is more than 11";
+endif
+

@@ -1,0 +1,164 @@
+
+\documentclass[english,t,ignorenonframetext,xcolor=table]{beamer}
+% Common options
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage[english]{babel}
+
+\mode<article>{\usepackage{fullpage}}
+\mode<article>{\usepackage{graphics}}
+\mode<presentation>{\usepackage{beamerthemerekj}}
+\mode<presentation>{\setbeamertemplate{blocks}[rounded][shadow=true]}
+
+\newcommand{\arch}{\boldsymbol{x}}
+\newcommand{\pars}{\boldsymbol{w}}
+\newcommand{\obj}{\boldsymbol{\Omega}(\arch)}
+\newcommand{\objest}{\boldsymbol{\hat{\Omega}}(\arch)}
+
+\newcommand{\objn}{\boldsymbol{\Omega}}
+\newcommand{\objestn}{\boldsymbol{\hat{\Omega}}}
+
+\newcommand{\energy}{{\eta}(\arch)}
+\newcommand{\delay}{{\tau}(\arch)}
+\newcommand{\energyest}{\hat{\eta}(\arch)}
+\newcommand{\delayest}{\hat{\tau}(\arch)}
+\newcommand{\best}{\boldsymbol{b}_\alpha(\arch)}
+\newcommand{\worst}{\boldsymbol{w}_\alpha(\arch)}
+\newcommand{\worstc}{\boldsymbol{w}_\alpha(\arch')}
+\newcommand{\bestn}{\boldsymbol{b}}
+\newcommand{\worstn}{\boldsymbol{w}}
+ 
+
+% Title
+\title[MOST]{
+MOST - Internal roadmap
+}
+
+% Authors
+\author[V.~Zaccaria]{
+Vittorio Zaccaria
+}
+
+%% Authors
+%\author[P.~Bellasi, W.~Fornaciari, D.~Siorpaes]{
+%Patrick~Bellasi\inst{1} \and 
+%William~Fornaciari\inst{1} \and 
+%David~Siorpaes\inst{2}
+%}
+
+% Institutions
+\institute[] {
+Confidential \\
+DEI - Politecnico di Milano, Italy
+}
+
+% Date
+\date[\today]{}
+
+
+\begin{document}
+
+\begin{frame}[label=cover]
+
+	\titlepage
+%	\begin{columns}[c]
+%	
+%	\column{1.5in}
+%	\begin{flushright}
+%	  %\includegraphics[width=0.5in]{eps/logo-polimi}
+%	\end{flushright}
+%
+%	\column{1.5in}
+%	\begin{flushleft}
+%	  %\includegraphics[width=0.6in]{eps/logo-st}
+%	\end{flushleft}
+%	\end{columns}
+\end{frame}
+
+\def\hilite<#1>{%
+	\temporal<#1>{\color{gray}}{\color{black}}{\color{black}}}
+%
+%
+%\section{Roadmap Overview}	
+%\subsection{Roadmap Overview}
+
+\begin{frame}
+\frametitle{MOST Milestones}
+\begin{block}{}
+    \begin{center}
+ 	Release 1.1 by June 2012
+    \end{center}
+\end{block}
+
+\begin{itemize}
+ \item Currently, MOST 1.0 contains a super-set of the capabilities of Multicube Explorer and STShell 2.0, providing advanced functionality for describing and running DSE policies.
+ \item MOST 1.1 has been extended with the capabilities shown in this presentation.
+\end{itemize}
+
+%\begin{block}{}
+%    \begin{center}
+%      Power consumption \alert{is key}
+%    \end{center}
+%\end{block}
+%Our exploration methodology aims at finding an optimal system configuration minimizing both energy $\energy$ and execution time $\delay$ of a given application:
+
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Main tasks}
+%
+%\begin{itemize}
+% \item Integration and extension of the Multicube Explorer XML interface.
+%	 \begin{itemize}
+%		 \item MPI support. 
+%		 \item Pthread support. 
+%	 \end{itemize}
+% \item Porting of DoEs and Optimizers to the new CDSR.
+%	 \begin{itemize}
+%		 \item Introduce suitable extensions to the CDSR for supporting MOSA and NSGA-II.
+%	 \end{itemize}
+%
+% \item Testing and validation
+%	 \begin{itemize}
+%		\item Extension of regression tests to the new CDSR.
+%	 \end{itemize}
+% 
+% \item Remote debug shell.
+%
+% \item Experimental campaign
+%	\begin{itemize}
+%		\item University cluster experimental campaign must begin as soon as possible on selected use cases.
+%	\end{itemize}
+%
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}
+%\frametitle{Main tasks}
+%
+%\begin{itemize}
+% \item Checkpointing shell scripts and optimizers.
+% \item Validation against DTLZ.
+% \item XML database and object persistent storage.
+% \item GPL code clean up.
+%	 \begin{itemize}
+%		 \item All GPL code must be factored out from the MOST codebase.
+%	 \end{itemize}
+% \item Refactoring of scripts and tests directory structures
+% \item License manager
+%\end{itemize}
+%\end{frame}
+
+
+%\begin{block}{}
+%    \begin{center}
+%      Power consumption \alert{is key}
+%    \end{center}
+%\end{block}
+%Our exploration methodology aims at finding an optimal system configuration minimizing both energy $\energy$ and execution time $\delay$ of a given application:
+
+
+
+
+\end{document}
+

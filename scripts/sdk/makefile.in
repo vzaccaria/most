@@ -1,0 +1,77 @@
+# Makefile for STShell 
+# 
+# (C) 2007, Politecnico di Milano and V. Zaccaria
+#
+# NOTE: In order to compile correctly the target, change the @_image@ path in all the
+# following definitions with the complete path of your installation of the stshell image.
+
+DSTDIR = @_dstdir@
+SRCDIR = @_srcdir@
+INCDIR = @_srcdir@
+OTHERCFLAGS = @_othercflags@
+OTHERCXXFLAGS = @_othercxxflags@
+OTHERLINKFLAGS = @_otherlinkflags@
+IMAGE = @_image@
+
+CXX=g++
+CFLAGS= $(OTHERCFLAGS) -I$(IMAGE)/include -I$(INCDIR) $(READLINEDIRINCLUDEFLAGS) 
+CXXFLAGS= $(OTHERCXXFLAGS) -I$(IMAGE)/include -I$(INCDIR) $(READLINEDIRINCLUDEFLAGS) 
+
+OS_NAME = $(shell uname -s)
+
+ifeq ("$(OS_NAME)", "SunOS")
+CXXFLAGS += -D__SOLARIS__ 
+CXXSOFLAGS = -shared -fPIC 
+endif
+
+ifeq ("$(OS_NAME)", "Darwin")
+CXXFLAGS += -D__MAC_OSX__ 
+CXXSOFLAGS = -fno-common -bundle -flat_namespace -undefined suppress
+endif
+
+ifeq ("$(OS_NAME)", "Linux")
+CXXFLAGS += 
+CXXSOFLAGS = -g -shared -fPIC 
+endif
+
+#####################################
+#     CREATE SYMBOLIC TARGETS       #
+#####################################
+
+TARGET_SRC = @_object@ 
+TARGET_SO = $(patsubst %.cc, %.so, $(TARGET_SRC))
+
+# Tells make to search for sources into SRCDIR, SRCDIR/optimizers and SRCDIR/drivers
+VPATH=$(SRCDIR)
+
+
+#####################################
+#     CREATE BUILD TARGETS          #
+#####################################
+
+all: $(TARGET_SO) 
+
+#############################
+#       ENGINE BUILD	    #
+#############################
+
+%.so: %.cc 
+	$(CXX) $< -o $@ $(CXXSOFLAGS) $(CXXFLAGS) $(OTHERLINKFLAGS)
+
+
+#############################
+#       CLEAN BUILD	    #
+#############################
+
+clean:
+	rm -f *.o $(TARGET_SO)
+
+#############################
+#      INSTALL BUILD	    #
+#############################
+
+install: all 
+	@mkdir -p $(IMAGE)
+	@mkdir -p $(IMAGE)/lib
+	install -m 744 $(DSTDIR)/*.so $(IMAGE)/lib
+

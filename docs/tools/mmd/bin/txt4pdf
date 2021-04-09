@@ -1,0 +1,14 @@
+#!/bin/sh
+
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+
+
+rm tmp.tex
+echo "CSS:                            template.css\nBase Header Level:       	3\nFormat:				complete\nLaTeX XSLT:			my_xelatex.xslt\nTitle:		$1\n" > tmp.txt
+cat tmp.txt $1 > tmp.mmd
+$srcdir/txt2pdf tmp.mmd
+rm tmp.mmd
+rm tmp.txt
+rm -f $1.pdf
+mv tmp.pdf $1.pdf

@@ -1,0 +1,145 @@
+
+# Creates a report for an objective space with at least two objectives
+set_procedure report_pdf(db, template)
+
+	set_local ob = get_objectives_list()
+	set_local pr = get_scalar_parameter_list()	
+	echo $ob
+	echo $pr
+	set_local i = 0
+	if(size($ob) >= 2)
+		while($i<(size($ob))-1)
+			set_local j = $i+1
+			while($j < (size($ob)))
+				set m1 = $ob@$i
+				set m2 = $ob@$j
+				set_local k = 0
+				while($k<size($pr))
+					set_local nm = "g-"+ $m1 + "-" + $m2 + "-" + $pr@$k
+					db_plot $db --xaxis=$ob@$i --yaxis=$ob@$j --output=$nm --plevel=$pr@$k --onepage=true --monochrome=false --override=$template
+					set_local k = $k + 1
+				done
+				set_local j = $j + 1
+			done
+			set_local i = $i + 1
+		done
+	endif
+	system("find g-*.ps | xargs pstopdf -");
+	system("pdftk g-*.pdf cat output report-level-"+$db+".pdf");
+	system("rm -f g-*.ps g-*.pdf "+$db+"-*");
+done
+
+set_procedure report_effect_par(par, n, template)
+	set random_doe_solutions_number = $n 
+	set random_doe_effect = $par
+
+	doe_load_doe "st_random_effect"
+	opt_load_optimizer "st_parallel_doe"
+
+	opt_tune "tmp"
+	 
+	set_local ob = get_objectives_list()
+        set_local pr = get_scalar_parameter_list()
+
+        set_local i = 0
+        if(size($ob) >= 2)
+                while($i<(size($ob))-1)
+                        set_local j = $i+1
+                        while($j < (size($ob)))
+                                set m1 = $ob@$i
+                                set m2 = $ob@$j
+                                set_local nm = "g-"+ $m1 + "-" + $m2 
+                                db_plot "tmp" --xaxis=$ob@$i --yaxis=$ob@$j --output=$nm --effect=$par --onepage=true --monochrome=true --override=$template
+                                set_local j = $j + 1
+                        done
+                        set_local i = $i + 1
+                done
+        endif
+	system("find g-*.ps | xargs pstopdf -");
+	system("pdftk g-*.pdf cat output report-effect-"+$par+".pdf");
+	system("rm -f g-*.ps g-*.pdf tmp-*");
+done
+
+set_procedure report_effect(n, template)
+	set_local pr = get_scalar_parameter_list()
+	set_local k = 0
+	while($k<size($pr))
+		report_effect_par($pr@$k, $n, $template)
+                set_local k = $k + 1
+	done
+	system("pdftk report-effect-*pdf cat output report-effect.pdf")
+	system("rm -f report-effect-*.pdf")
+done
+
+set_procedure db_frequency_array_p(db, fun, pred)
+        set_local ve = [ ]
+	set_local k = 0
+        foreach p in get_points($db)
+                if(is_valid($p))
+                        if($pred($p) == 1)
+                                set_local e_tuple = [ $fun($p), 1 ]
+                                set_local ve@$k = $e_tuple
+				set_local k = $k+1
+                        endif
+                endif
+        done
+        return $ve
+done
+
+set_procedure db_frequency_bin(ve, mn, mx, st)
+        set_local bins = to_bins($ve, $mn, $mx, $st)
+        set_local bc = bin_count($bins)
+        return $bc
+done
+
+set_procedure db_plot_frequency(db, fun, pred, template)
+        set_local mn = db_min_p($db, $fun, $pred)
+        set_local mx = db_max_p($db, $fun, $pred)
+        set_local fa = db_frequency_array_p($db, $fun, $pred)
+        set_local bb = db_frequency_bin($fa, $mn-$mx/10, $mx+$mx/10, ($mx-$mn)/10)
+        set_local name = "Frequency plot"
+        set_local plote = {[$bb@0, $bb@1, $name]}
+        db_plot_vector $plote  --monochrome=true --xaxis="Function value" --yaxis="Count" --title="" --output="frequency_plot" --onepage=true --graphic="linespoints" --override=$template
+        system("find frequency_plot.ps | xargs pstopdf -");
+        system("rm frequency_plot.ps");
+done
+
+set_procedure report_frequency_par(db, template)
+
+	set_local ob = get_objectives_list()
+	set_local obf= get_objectives_fun()
+        set_local pr = get_scalar_parameter_list()
+        set_local ip = get_scalar_parameter_index_list()
+
+	set_local j = 0 
+	while($j < (size($ob)))
+		set_local fpk = 0
+		set_local fun = $obf @ $j
+		while($fpk<size($pr))
+			set m2 = $ob @ $j
+			set_local lmn = get_min_level($pr @ $fpk)
+			set_local lmx = get_max_level($pr @ $fpk)
+			set_local mn = db_min_p($db, $fun, ^all)
+			set_local mx = db_max_p($db, $fun, ^all)
+			while($lmn<=$lmx)
+				if($mn!=$mx)
+					set_local fa = db_frequency_array_p($db, $fun, ^(x)= get_level($x, $ip @ $fpk)==$lmn)
+					set_local bb = db_frequency_bin($fa, $mn, $mx+($mx-$mn)/10, ($mx-$mn)/10)
+					set_local name = "g-" + $ob @ $j + "-" + $pr@$fpk + "-" + $lmn
+					set_local plote = {[$bb@0, $bb@1, $name]}
+					db_plot_vector $plote  --monochrome=true --xaxis=$ob @ $j --yaxis="Count" --title=$pr @ $fpk+"-"+$lmn  --output=$name --onepage=true --graphic="linespoints" --override=$template
+				endif
+				set_local lmn = $lmn+1
+			done
+			set_local fpk = $fpk + 1
+		done
+		set_local j = $j + 1
+	done
+	system("find g-*.ps | xargs pstopdf -");
+	system("pdftk g-*.pdf cat output report-dist.pdf");
+	system("rm -f g-*.ps g-*.pdf g-* tmp-*");
+done
+
+
+
+echo "Initialization: STShell 'report' pack read."

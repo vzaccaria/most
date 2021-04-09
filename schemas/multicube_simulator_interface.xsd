@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:design="http://www.multicube.eu/"
+	targetNamespace="http://www.multicube.eu/"
+	elementFormDefault="qualified">
+	<xsd:complexType name="comm_element">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:element name="item">
+				<xsd:complexType>
+					<xsd:attribute name="index" type="xsd:integer" use="optional" />
+					<xsd:attribute name="position" type="xsd:integer" use="optional" />
+					<xsd:attribute name="value" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="value" type="xsd:string" use="optional" />
+	</xsd:complexType>
+	<xsd:complexType name="error_params">
+		<xsd:attribute name="reason" type="xsd:string" use="required" />
+		<xsd:attribute name="kind" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="fatal" />
+					<xsd:enumeration value="non-fatal" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="simulator_input">
+		<xsd:choice minOccurs="1" maxOccurs="unbounded">
+			<xsd:element name="parameter" type="design:comm_element" />
+		</xsd:choice>
+		<xsd:attribute name="version" type="xsd:decimal" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="simulator_output">
+		<xsd:choice minOccurs="1" maxOccurs="unbounded">
+			<xsd:element name="system_metric" type="design:comm_element" />
+			<xsd:element name="error" type="design:error_params" />
+		</xsd:choice>
+		<xsd:attribute name="version" type="xsd:decimal" use="required"/>
+	</xsd:complexType>
+	<xsd:element name="simulator_input_interface" type="design:simulator_input" />
+	<xsd:element name="simulator_output_interface" type="design:simulator_output" />
+</xsd:schema>

@@ -1,0 +1,9 @@
+# Comparison with full search
+drv_load_driver "st_test"
+set pareto_metrics = { "M1","M2","M3" }
+
+foreach b in $pareto_metrics 
+	echo "Metric "+$b
+done
+
+

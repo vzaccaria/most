@@ -1,0 +1,14 @@
+opt_load_optimizer "st_parallel_doe"
+doe_load_doe "st_fractional_factorial"
+drv_load_driver "st_test_efvi"
+set parallel_instances = 16
+set generator_strings = (* S1=["S2","S5"] S3=["S2","S6"] S4=["S2","S5","S6"] *)
+set fold_over_factor = "S5"
+set complete_fold_over = "true"
+set pareto_metrics = { } 
+opt_tune
+
+#db_write "full.db"
+#drv_load_driver "st_wattch"
+#db_read  "full.db"
+#db_plot --xaxis="total_energy" --yaxis="total_delay" -- zaxis="total_area"

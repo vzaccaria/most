@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified"
+	targetNamespace="http://www.multicube.eu/"
+	xmlns:design_space="http://www.multicube.eu/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:group name="operators">
+		<xsd:choice>
+			<xsd:element name="greater" type="design_space:comparison_tag" />
+			<xsd:element name="greater-equal" type="design_space:comparison_tag" />
+			<xsd:element name="less" type="design_space:comparison_tag" />
+			<xsd:element name="less-equal" type="design_space:comparison_tag" />
+			<xsd:element name="equal" type="design_space:comparison_tag" />
+			<xsd:element name="not-equal" type="design_space:comparison_tag" />
+			<xsd:element name="and" type="design_space:boolean_tag" />
+			<xsd:element name="or" type="design_space:boolean_tag" />
+			<xsd:element name="not" type="design_space:boolean_tag_2" />
+			<xsd:element name="if" type="design_space:conditional_tag" />
+			<xsd:element name="expr" type="design_space:expr" />
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="op_leaves">
+		<xsd:choice>
+			<xsd:element name="parameter">
+				<xsd:complexType>
+					<xsd:attribute name="name" type="xsd:string" />
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="constant">
+				<xsd:complexType>
+					<xsd:attribute name="value" type="xsd:string" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:complexType name="parameter">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="item">
+				<xsd:complexType>
+					<xsd:attribute name="name" type="xsd:string" use="optional" />
+					<xsd:attribute name="value" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z_][A-Za-z0-9_]*" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="type" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="integer" />
+					<xsd:enumeration value="boolean" />
+					<xsd:enumeration value="exp2" />
+					<xsd:enumeration value="string" />
+					<xsd:enumeration value="on_off_mask" />
+					<xsd:enumeration value="permutation" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="description" type="xsd:string" use="optional" />
+		<xsd:attribute name="min" type="xsd:integer" use="optional" />
+		<xsd:attribute name="max" type="xsd:integer" use="optional" />
+		<xsd:attribute name="step" type="xsd:positiveInteger" use="optional" default="1" />
+		<xsd:attribute name="dimension" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[0-9]+|@.+" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="on_set_size" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[0-9]+|@.+" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="instances" type="xsd:integer" use="optional" />
+	</xsd:complexType>
+	<xsd:complexType name="expr">
+		<xsd:choice maxOccurs="2" minOccurs="2">
+			<xsd:group ref="design_space:operators"></xsd:group>
+			<xsd:group ref="design_space:op_leaves"></xsd:group>
+		</xsd:choice>
+		<xsd:attribute name="operator">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="+" />
+					<xsd:enumeration value="-" />
+					<xsd:enumeration value="*" />
+					<xsd:enumeration value="/" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="boolean_tag">
+		<xsd:choice maxOccurs="unbounded" minOccurs="2">
+			<xsd:group ref="design_space:operators" />
+			<xsd:group ref="design_space:op_leaves" />
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="boolean_tag_2">
+		<xsd:choice maxOccurs="1" minOccurs="1">
+			<xsd:group ref="design_space:operators" />
+			<xsd:group ref="design_space:op_leaves" />
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="comparison_tag">
+		<xsd:choice maxOccurs="2" minOccurs="2">
+			<xsd:group ref="design_space:operators" />
+			<xsd:group ref="design_space:op_leaves"></xsd:group>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="conditional_tag">
+		<xsd:sequence>
+			<xsd:group maxOccurs="1" minOccurs="1" ref="design_space:operators" />
+			<xsd:element maxOccurs="1" minOccurs="1" name="then">
+				<xsd:complexType>
+					<xsd:choice minOccurs="1" maxOccurs="1">
+						<xsd:group ref="design_space:operators" />
+						<xsd:group ref="design_space:op_leaves" />
+					</xsd:choice>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element maxOccurs="1" minOccurs="0" name="else">
+				<xsd:complexType>
+					<xsd:choice minOccurs="1" maxOccurs="1">
+						<xsd:group ref="design_space:operators" />
+						<xsd:group ref="design_space:op_leaves" />
+					</xsd:choice>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="system_metric">
+		<xsd:attribute name="name" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z_][A-Za-z0-9_]*" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="description" type="xsd:string" use="optional" />
+		<xsd:attribute name="type" type="xsd:string" use="required" />
+		<xsd:attribute name="unit" type="xsd:string" use="required" />
+		<xsd:attribute name="desired" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="small" />
+					<xsd:enumeration value="big" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="simulator">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="1" name="simulator_executable">
+				<xsd:complexType>
+					<xsd:attribute name="path" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="parameters">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:element name="parameter" type="design_space:parameter" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rule">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:group ref="design_space:operators" />
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="rules">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:element name="rule" type="design_space:rule" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="system_metrics">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:element name="system_metric" type="design_space:system_metric" />
+		</xsd:sequence>
+		<xsd:attribute name="repeat" type="xsd:integer" use="optional" />
+	</xsd:complexType>
+	<xsd:element name="design_space">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element maxOccurs="1" minOccurs="1" name="simulator" type="design_space:simulator" />
+				<xsd:element maxOccurs="1" minOccurs="1" name="parameters" type="design_space:parameters" />
+				<xsd:element maxOccurs="1" minOccurs="0" name="rules" type="design_space:rules" />
+				<xsd:element maxOccurs="1" minOccurs="1" name="system_metrics" type="design_space:system_metrics" />
+			</xsd:all>
+			<xsd:attribute name="version" type="xsd:decimal" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

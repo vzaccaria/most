@@ -1,0 +1,15 @@
+opt_load_optimizer "st_parallel_doe"
+doe_load_doe "st_full_search"
+
+set parallel_instances = 16 
+
+drv_load_driver "st_test"
+
+set_objective a(x) = M1($x)
+set_objective b(x) = M3($x)
+
+opt_tune "PARALLEL"
+
+db_write "PARALLEL" --file_name="par.db"
+
+

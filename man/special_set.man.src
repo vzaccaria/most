@@ -1,0 +1,36 @@
+.SH NAME
+set
+.SH SYNOPSYS
+\fBset\fP \fIvar\fP = \fIexpr\fP
+.SH DESCRIPTION
+This commands instantiates a variable named \fIvar\fP and assigns to it the value of expression \fIexpr\fP. The expression can be composed of any combination of variables (usually denoted by the prefix \fI$\fP), constants and operators. The variable may be of one the following allowed types:
+.TP
+\fBscalars, floats, strings\fP
+Scalars are usually denoted by numbers without the decimal point (e.g. \fB7\fP) while floats do have a decimal point (e.g. \fB8.3\fP). Strings, instead, are delimited by quotes (e.g. \fB"foo"\fP). While most arithmetic operators work both on scalars and floats, strings can only be concatenated with the "+" operator.
+.TP
+\fBlists\fP
+Lists can be created by using the "{}" brackets, by including the values separated with commas. List values can be of any allowed type (i.e. they may contain recursively also other lists). If any variable is specified, it is actually evaluated before being put into the list. 
+Lists can be concatenated with the + operator, while each element of a list can be evaluated with the \f(CRforeach\fP control statement. The following example shows a list containing another list:
+.IP
+\f(CRset l =  { 2 , { 3 , 4 } }\fP.
+.TP
+\fBvectors\fP
+Vectors can be created by using the "[]", by including the values separated with commas. Vector values can be of any allowed type (i.e., they are similar to lists). Vector values can be accessed with the \f(CR@\fP operator.  The following example shows a vector containing, among other values, a list:
+.IP
+\f(CRset v =  [ "foo", 2 , { 3 , 4 } ]\fP
+.TP
+\fBmaps\fP
+Maps are composed of a sequence of key-value pairs. They can be created by using the "(*" and "*)" brackets by indicating the keys and the associated values: 
+.IP
+\f(CRset map =  (* key1="foo" key2=2 *)\fP
+.IP
+Map's values can be accessed with the \f(CR@\fP operator by indicating the key as a string. For example, \f(CRmap@"key1"\fP returns the value associated with key1 in the above map (i.e. \f(CR"foo"\fP).
+.TP
+\fBpoints\fP
+Points actual design instances associated with the optimization problem. They are characterized by a number of parameters according to the current design space. Each parameter has a "level", i.e., a scalar value belonging to the parameter range. A point can be constructed by using the % character as a bracket: 
+.IP
+\f(CRset point =  % 3 2 0 %\fP
+.IP
+In this case the point's three parameters are set to the levels 3, 2 and 0 respectively. Note that these values have a meaning with respect to the actual design space so it is not safe to directly use them.
+.SH RETURN VALUE
+The return variable $? is set to the value of \fIexpr\fP on success, \fIfalse\fP in the case the \fIexpr\fP is invalid. 

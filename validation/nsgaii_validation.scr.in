@@ -1,0 +1,50 @@
+#
+#
+read_script "@bdir@/validation/meth_design_space.scr"
+
+#db_copy "root" --destination="real_pareto"
+#db_filter_pareto "real_pareto" --valid=true
+#db_write "real_pareto" --file_name="real_pareto.db"
+
+doe_load_doe "st_full_search"
+opt_load_optimizer "st_parallel_pareto_doe"
+opt_tune "real_pareto"
+db_filter_pareto "real_pareto" --valid=true
+
+# RSM NAMES: linear, shepard, nn, rbf
+# DOE NAMES: st_random, st_box_behnken, st_ccd_fc, st_full_factorial
+#
+
+opt_load_optimizer "st_nsgaii"
+doe_load_doe "st_random"
+
+set plot = { }
+set data = [ ] 
+set i = 0
+
+set num = 0
+while($num < 10)
+	foreach pop in { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
+		set random_doe_solutions_number	= $pop
+		foreach gen in { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
+			set generations_number	= $gen
+			set trying_configurations = $pop * 4
+			set realistic_simulation_mode = true
+			set kernel_realistic_simulations = 0 
+			opt_tune "nsgaii"
+			set nsim = $kernel_realistic_simulations
+			db_filter_pareto "nsgaii" --valid=true
+			set name = "nsgaii-"+$pop+"-"+$gen+"-"+$num+".db"
+			db_compute_ADRS	"nsgaii" --reference="real_pareto"
+			set adrs = $?
+			set plot = $plot + { [ [ $nsim], [ $adrs ], $name ] }
+			set data@$i = [ $nsim, $adrs, $name ] 
+			set i = $i + 1
+		done
+	done
+	set num = $num + 1
+done
+
+write_object $data --file_name="nsgaii.obj.db"
+db_plot_vector $plot --monochrome=true --xaxis="Number of simulations" --yaxis="ADRS" --title="NSGA-II validation" --output="nsgaii-ADRS-nsims" --onepage=true --size=3.0 --key="off"
+

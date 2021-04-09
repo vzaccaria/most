@@ -1,0 +1,6 @@
+# This is an automatically generated log of the previous interactive session of STShell
+doe_load_doe "st_full_search"
+opt_load_optimizer "st_parallel_doe"
+opt_tune "X"
+db_write "X" --file_name="result.db"
+quit

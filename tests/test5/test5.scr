@@ -1,0 +1,31 @@
+drv_load_driver "st_test"
+set_objective a(x) = M1($x)
+set_objective b(x) = M2($x)
+set_objective c(x) = M3($x)
+
+set random_doe_solutions_number = 800
+while ($random_doe_solutions_number < 1000)
+	########### RANDOM ###########
+	opt_load_optimizer "st_parallel_pareto_doe"
+	doe_load_doe "st_random"
+	opt_tune "PDOE"
+	db_filter_pareto "PDOE"
+
+
+	########### MOSA ###########
+	opt_load_optimizer "st_mosa"
+
+	#MOSA variables
+	set epochs = 2  
+	set epoch_length = 50 
+	set t_decrease_coefficient = 0.5
+
+	#set use_uniform_distribution = "true"
+	while ($epochs < 4)
+		opt_tune "PDOE"
+		set epochs = $epochs + 1
+	done
+
+	set random_doe_solutions_number = $random_doe_solutions_number + 100
+done
+

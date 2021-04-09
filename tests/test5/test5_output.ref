@@ -1,0 +1,51 @@
+Information: Creating test
+Information: Loading test
+Information: Assigned value [ "1000", "1009" ] to S1_bounds
+Information: Assigned value [ "0", "9" ] to S2_bounds
+Information: Assigned value [ "0", "9" ] to S3_bounds
+Information: Assigned value [ "S1", "S2", "S3" ] to ds_parameters
+Information: Assigned value [ "M1", "M2", "M3" ] to metrics
+Information: Setting objective a to M1($x)
+Information: Assigned value 1 to objectives_number
+Information: Setting objective b to M2($x)
+Information: Assigned value 2 to objectives_number
+Information: Setting objective c to M3($x)
+Information: Assigned value 3 to objectives_number
+Information: Assigned value 800 to random_doe_solutions_number
+Information: Current optimizer has been set to 'Parallel Pareto DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Random DoE - (random_doe_solutions_number)'
+Information: Assigned value 10 to parallel_doe_tempdb_granularity
+Information: Generating random DoE
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 800 points
+Information: Filtering PDOE for pareto points
+Information: Current optimizer has been set to 'Dominance based Multi-objective Simulated annealing - (epochs, epoch_length, t_decrease_coefficient)'
+Information: Assigned value 2 to epochs
+Information: Assigned value 50 to epoch_length
+Information: Assigned value 0.500000 to t_decrease_coefficient
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 101 points
+Information: Assigned value 3 to epochs
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 151 points
+Information: Assigned value 4 to epochs
+Information: Assigned value 900 to random_doe_solutions_number
+Information: Current optimizer has been set to 'Parallel Pareto DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Random DoE - (random_doe_solutions_number)'
+Information: Generating random DoE
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 900 points
+Information: Filtering PDOE for pareto points
+Information: Current optimizer has been set to 'Dominance based Multi-objective Simulated annealing - (epochs, epoch_length, t_decrease_coefficient)'
+Information: Assigned value 2 to epochs
+Information: Assigned value 50 to epoch_length
+Information: Assigned value 0.500000 to t_decrease_coefficient
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 101 points
+Information: Assigned value 3 to epochs
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 151 points
+Information: Assigned value 4 to epochs
+Information: Assigned value 1000 to random_doe_solutions_number
+Information: Removing test
+Information: Exiting from MOST shell

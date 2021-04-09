@@ -1,0 +1,13 @@
+#!/bin/sh
+
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+
+echo "CSS:                            template.css\nBase Header Level:       	3\nFormat:				complete\n\n" > tmp.txt 
+cat tmp.txt $1 > tmp.mmd
+$srcdir/txt2web tmp.mmd
+rm tmp.txt
+rm -f $1.html
+rm tmp.mmd
+mv tmp.html $1.html
+cp $srcdir/../../template.css .

@@ -1,0 +1,107 @@
+Information: Current optimizer has been set to 'Parallel Pareto DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Full search DoE'
+Information: Creating test
+Information: Loading test
+Information: Assigned value [ "1000", "1009" ] to S1_bounds
+Information: Assigned value [ "0", "9" ] to S2_bounds
+Information: Assigned value [ "0", "9" ] to S3_bounds
+Information: Assigned value [ "S1", "S2", "S3" ] to ds_parameters
+Information: Assigned value [ "M1", "M2", "M3" ] to metrics
+Information: Assigned value [ "1", "8" ] to ics_bounds
+Information: Assigned value [ "8", "256" ] to ibs_bounds
+Information: Assigned value [ "1", "16" ] to iw_bounds
+Information: Assigned value 200.000000 to max_total_area
+Information: Assigned value 50.000000 to min_total_area
+Information: Assigned value "full_solution.db" to visited_solution
+Information: Assigned value "total_energy" to metric1
+Information: Assigned value "total_delay" to metric2
+Information: Setting objective a to M1($x)
+Information: Assigned value 1 to objectives_number
+Information: Setting objective b to M3($x)
+Information: Assigned value 2 to objectives_number
+Information: Assigned value 10 to parallel_doe_tempdb_granularity
+Information: Generating full search DoE
+Information: Database 'PDOE' created
+Information: The current explorer analyzed 1000 points
+
+Shell variables:
+Name                  Value      
+----------            ------------------------ 
+S1_bounds             [ "1000", "1009" ]  
+S2_bounds             [ "0", "9" ]  
+S3_bounds             [ "0", "9" ]  
+ds_parameters         [ "S1", "S2", "S3" ]  
+ibs_bounds            [ "8", "256" ]  
+ics_bounds            [ "1", "8" ]  
+iw_bounds             [ "1", "16" ]  
+kernel_evaluations_number  1000        
+kernel_realistic_simulations  1000        
+kernel_root_hits      0           
+max_total_area        200.000000  
+metric1               "total_energy"  
+metric2               "total_delay"  
+metrics               [ "M1", "M2", "M3" ]  
+min_total_area        50.000000   
+objectives_number     2           
+parallel_doe_tempdb_granularity  10          
+visited_solution      "full_solution.db"  
+
+Optimization objectives:
+Name                  Expression 
+----------            ------------------------ 
+a(x)                  M1($x)
+b(x)                  M3($x)
+
+Optimization constraints:
+Name                  Expression 
+----------            ------------------------ 
+
+Databases in memory
+Name                            size       
+--------------------------------------------
+PDOE                            10         
+root                            1000       
+Information: Writing the database to disk
+Information: Database correctly written
+Information: Clearing database PDOE
+Information: Reading database tmp.db
+
+Shell variables:
+Name                  Value      
+----------            ------------------------ 
+S1_bounds             [ "1000", "1009" ]  
+S2_bounds             [ "0", "9" ]  
+S3_bounds             [ "0", "9" ]  
+ds_parameters         [ "S1", "S2", "S3" ]  
+ibs_bounds            [ "8", "256" ]  
+ics_bounds            [ "1", "8" ]  
+iw_bounds             [ "1", "16" ]  
+kernel_evaluations_number  1000        
+kernel_realistic_simulations  1000        
+kernel_root_hits      0           
+max_total_area        200.000000  
+metric1               "total_energy"  
+metric2               "total_delay"  
+metrics               [ "M1", "M2", "M3" ]  
+min_total_area        50.000000   
+objectives_number     2           
+parallel_doe_tempdb_granularity  10          
+visited_solution      "full_solution.db"  
+
+Optimization objectives:
+Name                  Expression 
+----------            ------------------------ 
+a(x)                  M1($x)
+b(x)                  M3($x)
+
+Optimization constraints:
+Name                  Expression 
+----------            ------------------------ 
+
+Databases in memory
+Name                            size       
+--------------------------------------------
+PDOE                            10         
+root                            1000       
+Information: Removing test
+Information: Exiting from MOST shell

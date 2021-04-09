@@ -1,0 +1,22 @@
+Information: Current optimizer has been set to 'Parallel DoE optimizer - (parallel_doe_temp_database, parallel_doe_tempdb_granularity)'
+Information: Current DoE has been set to 'Full search DoE'
+Information: Assigned value 16 to parallel_instances
+Information: Creating test
+Information: Loading test
+Information: Assigned value [ "1000", "1009" ] to S1_bounds
+Information: Assigned value [ "0", "9" ] to S2_bounds
+Information: Assigned value [ "0", "9" ] to S3_bounds
+Information: Assigned value [ "S1", "S2", "S3" ] to ds_parameters
+Information: Assigned value [ "M1", "M2", "M3" ] to metrics
+Information: Setting objective a to M1($x)
+Information: Assigned value 1 to objectives_number
+Information: Setting objective b to M3($x)
+Information: Assigned value 2 to objectives_number
+Information: Generating full search DoE
+Information: Assigned value 10 to parallel_doe_tempdb_granularity
+Information: Database 'PARALLEL' created
+Information: The current explorer analyzed 1000 points
+Information: Writing the database to disk
+Information: Database correctly written
+Information: Removing test
+Information: Exiting from MOST shell

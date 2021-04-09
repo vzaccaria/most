@@ -1,0 +1,25 @@
+opt_load_optimizer "st_parallel_pareto_doe"
+doe_load_doe "st_full_search"
+drv_load_driver "st_test"
+
+set ics_bounds = [ "1","8" ]
+set ibs_bounds = [ "8","256" ]
+set iw_bounds = [ "1","16" ]
+
+set max_total_area = 200.0
+set min_total_area = 50.0
+set visited_solution = "full_solution.db"
+set metric1 = "total_energy"
+set metric2 = "total_delay"
+
+set pareto_metrics = { "M1","M3" }
+
+opt_tune "PDOE"
+
+set_function count(p, v) = $v+1
+
+set v = db_reduce("PDOE", ^count, 0)
+
+echo $v
+
+

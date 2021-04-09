@@ -1,0 +1,5 @@
+In order to work, the program needs R software correctly installed. Use apt-get or synaptic in order to install needed packages:
+r-base
+r-base-core
+r-cran-hmisc
+r-cran-design

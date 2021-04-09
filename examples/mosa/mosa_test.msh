@@ -1,0 +1,38 @@
+# Comparison with full search
+drv_load_driver "st_test"
+set pareto_metrics = { "M1", "M2", "M3" }
+
+########### RANDOM ###########
+opt_load_optimizer "st_pareto_full_search"
+opt_tune
+
+
+########### MOSA ###########
+opt_load_optimizer "st_mosa"
+
+#MOSA variables
+set epochs = 1  
+set epoch_length = 1 
+set t_decrease_coefficent = 0.5
+
+#set use_uniform_distribution = "true"
+while ($epoch_length <= 50)
+	set epochs = 0
+	while ($epochs < 10)
+		opt_tune
+		set count = $?
+
+		db_change_current "F"
+		db_report "size"
+		set pareto_size = $?
+
+		db_compute_coverage "F" --reference="P" 
+		set coverage = $?
+
+		echo $epoch_length+";"+$epochs+";"+$count+";"+$coverage+";"+$pareto_size+";"+(100-$coverage)/100*$pareto_size
+		set epochs = $epochs + 2
+	done
+        set epoch_length = $epoch_length+10
+done
+
+

@@ -1,0 +1,14 @@
+.SH NAME
+set_metric
+.SH SYNOPSYS
+\fBset_metric\fP \fIm_name(point)\fP = \fIexpr(point)\fP
+.SH DESCRIPTION
+
+This command creates a new \fIcompanion\fP metric \fIm_name\fP associated with each design point \fIpoint\fP of the design space. The companion metrics are evaluated whenever all the actual metrics of a point have been returned by the driver, but before objectives and constraints are evaluated. Once evaluated, the companion metrics are stored into the metrics cache for speeding up the optimization process.
+
+.SH EXAMPLES
+\f(CRset_metric Pdyn_W(x) = Energy_dyn_J($x)/delay_s($x)\fP
+.SH SEE ALSO
+\fBset_function\fP
+.SH RETURN VALUE
+The return variable $? is set to the value of true on success, false otherwise. 

@@ -1,0 +1,25 @@
+#!/bin/sh
+for hdr in ../src/*.h ; do 
+	echo "Installing license on $hdr" ; 
+	./put_license $hdr 
+done
+
+for fil in ../src/*.cc ; do 
+	echo "Installing license on $fil" ; 
+	./put_license $fil 
+done
+
+for fil in ../src/doe/*.cc ; do 
+	echo "Installing license on $fil" ; 
+	./put_license $fil 
+done
+
+for fil in ../src/drivers/*.cc ; do 
+	echo "Installing license on $fil" ; 
+	./put_license $fil 
+done
+
+for fil in ../src/optimizers/*.cc ; do 
+	echo "Installing license on $fil" ; 
+	./put_license $fil 
+done

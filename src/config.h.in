@@ -1,0 +1,6 @@
+#define __STSHELL_DATE__                          (__DATE__ " " __TIME__)
+#define __STSHELL_HARDWIRED_BUILD_PATH__          "/local/build/image"
+#define __STSHELL_INSTALLATION_PATH__             "/local/build/image"
+#define __STSHELL_VERSION__                       ("@GIT_COMMIT_HASH@")
+#define __STSHELL_CODENAME__                      "MOST"
+#define __STSHELL_RELEASE_NAME__                  "R@most_VERSION_MAJOR@.@most_VERSION_MINOR@"

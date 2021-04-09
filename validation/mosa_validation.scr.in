@@ -1,0 +1,47 @@
+#
+#
+read_script "@bdir@/validation/meth_design_space.scr"
+
+doe_load_doe "st_full_search"
+opt_load_optimizer "st_parallel_pareto_doe"
+opt_tune "real_pareto"
+db_filter_pareto "real_pareto" --valid=true
+
+# RSM NAMES: linear, shepard, nn, rbf
+# DOE NAMES: st_random, st_box_behnken, st_ccd_fc, st_full_factorial
+#
+
+opt_load_optimizer "st_mosa"
+doe_load_doe "st_random"
+
+set plot = { }
+set data = [ ] 
+set i = 0
+
+set progress = false
+
+set num = 0
+while($num < 3)
+	foreach epochs in { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30, 35 }
+		foreach epoch_length in { 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60 }
+			foreach t_decrease_coefficient in { 0.5, 0.75, 0.95 }
+				set realistic_simulation_mode = true
+				set kernel_realistic_simulations = 0 
+				opt_tune "mosa"
+				db_filter_pareto "mosa" --valid=true
+				set nsim = $kernel_realistic_simulations
+				set name = "mosa-"+$epochs+"-"+$epoch_length+"-"+$t_decrease_coefficient+"-"+$num+".db"
+				db_compute_ADRS	"mosa" --reference="real_pareto"
+				set adrs = $?
+				set plot = $plot + { [ [ $nsim], [ $adrs ], $name ] }
+				set data@$i = [ $nsim, $adrs, $name ] 
+				set i = $i + 1
+			done
+		done
+	done
+	set num = $num + 1
+done
+
+write_object $data --file_name="mosa.obj.db"
+db_plot_vector $plot --monochrome=true --xaxis="Number of simulations" --yaxis="ADRS" --title="MOSA validation" --output="mosa-ADRS-nsims" --onepage=true --size=3.0 --key="off"
+

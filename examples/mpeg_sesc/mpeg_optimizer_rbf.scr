@@ -1,0 +1,96 @@
+#SESC COMMAND LINE AND PATH. These paths provoke an error since sesc is not installed
+set sesc_command_line = "/home/dei/931277/sesc/bench/mpeg2dec/"
+set sesc_path = "/home/dei/931277/sesc/build/"
+
+drv_load_driver "st_sesc"
+
+set ics_bounds =    	[ "2K", "16K" ]
+set dcs_bounds =    	[ "2K", "16K" ]
+set l2cs_bounds=    	[ "32K", "256K" ]
+set icw_bounds  =    	[ "1w", "4w" ]
+set dcw_bounds  =    	[ "2w", "8w" ]
+set l2cw_bounds  =    	[ "2w", "8w" ]
+set iwidth_bounds=  	[ "1", "8" ]
+set cbs_bounds =   	[ "16B", "16B" ]
+set pn_bounds =    	[ "2", "16" ]
+
+# STSHELL PARAMETERS
+set progress=true
+set db_report_conf_col_size = 50 
+set parallel_instances = 32
+
+set frequency_Hz = 1000000000
+
+###############
+# APPLICATION #
+###############
+set nframe = 2
+
+#########################
+# CMP AREA mm^2 in 65nm #
+#########################
+
+set_function real_iwidth(x) = pow(2, iwidth($x)-level("iwidth","1"))
+set_function real_pn(x) = 2*pow(2, pn($x)-level("pn","2"))
+set_function icache_size(x) = 2048*pow(2, ics($x)-level("ics","2K"))
+set_function dcache_size(x) = 2048*pow(2, dcs($x)-level("dcs","2K"))
+set_function l2cache_size(x) = 32768*pow(2, l2cs($x)-level("l2cs","32K"))
+set_function total_cache_size(x) = real_pn($x)*(icache_size($x)+dcache_size($x))+l2cache_size($x)
+
+# total cache area mm^2
+set area_per_B = 12.5/(1024*1024)
+set_function total_cache_area(x) = total_cache_size($x)*$area_per_B
+
+# total cores area mm^2
+set_function processor_area(x) = 11.52 *(real_iwidth($x) * 0.17 + 0.32) 
+set_function total_cores_area(x) = real_pn($x)*processor_area($x)
+
+# xbar_area mm^2
+set_function xbar_area(x) = real_pn($x)*0.75 + 2.6
+
+# TOTAL AREA
+set_function total_configuration_area(x) = total_cache_area($x) + total_cores_area($x) + xbar_area($x)
+
+##########################
+# APPLICATION FRAME RATE #
+##########################
+set_function frame_s(x) = ($nframe*$frequency_Hz)/(metrics($x)@1)
+
+####################
+# ENERGY PER FRAME #
+####################
+set_function energy_frame(x) = (metrics($x)@0)/$nframe
+
+###############
+# CONSTRAINTS #
+###############
+# AREA < 100mm^2
+set_constraint total_area(x) = (total_configuration_area($x)/100) < 1
+# FRAME RATE > 25 
+set_constraint frame_rate(x) = frame_s($x)/25 > 1 
+# ENERGY ... 
+ 
+set_objective total_system_area(x) = total_configuration_area($x)
+set_objective energy_per_frame(x) = energy_frame($x)
+
+db_read "full_mpeg4.db" --destination="root"
+
+##################################################################
+# LOAD THE OPTIMIZATION STRATEGY 				 #
+# SET THE VARIABLES ASSOCIATED TO THE OPTIMIZATION STRATEGY	 # 
+##################################################################
+set random_doe_solutions_number = 1000 
+
+doe_load_doe "st_random"
+opt_load_optimizer "st_parallel_doe"
+
+opt_tune "RAND_SAMPLE"
+
+doe_load_doe "st_full_search"
+db_train_rsm "RBF_PREDICTION" --source="RAND_SAMPLE" --model="RBF_ON_DOE" --type="power" --parameter=1 --preprocess=1.0
+
+#db_report "RBF_PREDICTION"
+
+echo "RMSE for each metric:"
+echo compute_rmse("RBF_PREDICTION", "root")
+

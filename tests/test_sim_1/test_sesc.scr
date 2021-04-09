@@ -1,0 +1,44 @@
+drv_load_driver "st_sesc"
+
+set ics_bounds =   [ "2K", "2K" ]
+set dcs_bounds =   [ "2K", "2K" ]
+set l2cs_bounds=   [ "32K", "32K" ]
+set dcs_bounds =   [ "2K", "2K" ]
+set icw_bounds  =  [ "1", "1" ]
+set dcw_bounds  =  [ "1", "1" ]
+set l2cw_bounds  = [ "1", "1" ]
+set iwidth_bounds= [ "1", "1" ]
+set cbs_bounds =   [ "16", "16" ]
+set pn_bounds =    [ "2", "2" ]
+
+opt_load_optimizer "st_parallel_doe"
+doe_load_doe "st_full_search"
+
+
+set parallel_instances = 1 
+
+set sesc_command_line = "fft.mips -m10"  
+opt_tune "FS"
+
+db_write "root" --file_name="f1.db" 
+
+set number_of_scenarios = 2
+drv_load_driver "st_sesc"
+set sesc_command_lines = { "fft.mips -m10", "fft.mips -m14"}
+
+set ics_bounds =   [ "2K", "2K" ]
+set dcs_bounds =   [ "2K", "2K" ]
+set l2cs_bounds=   [ "32K", "32K" ]
+set dcs_bounds =   [ "2K", "2K" ]
+set icw_bounds  =  [ "1", "1" ]
+set dcw_bounds  =  [ "1", "1" ]
+set l2cw_bounds  = [ "1", "1" ]
+set iwidth_bounds= [ "1", "1" ]
+set cbs_bounds =   [ "16", "16" ]
+set pn_bounds =    [ "2", "4" ]
+
+db_clear "root"
+
+opt_tune "FS2" 
+
+db_write "root" --file_name="f2.db"

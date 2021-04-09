@@ -1,0 +1,94 @@
+# Makefile for SPLINE rsms
+# 
+# (C) 2007, Politecnico di Milano
+
+XDRDIR = @xdrsrcdir@
+DSTDIR = @dstdir@
+SRCDIR = @srcdir@/gpl/splines/src
+INCDIR = @srcdir@/gpl/splines/src
+OTHERCFLAGS = @othercflags@
+OTHERCXXFLAGS = @othercxxflags@
+OTHERLINKFLAGS = @otherlinkflags@
+IMAGE = @image@
+STATIC = @static@
+
+DOXYGEN=doxygen
+CXX=g++
+MPICXX=mpic++
+AR=ar cr
+RANLIB=ranlib
+SHLIB_LD=g++ -fPIC
+CFLAGS= $(OTHERCFLAGS) -I$(XDRDIR) -I$(INCDIR)  
+CXXFLAGS= $(OTHERCXXFLAGS) -I$(XDRDIR) -I$(INCDIR)  
+
+OS_NAME = $(shell uname -s)
+
+ifeq ("$(OS_NAME)", "SunOS")
+CXXFLAGS += -D__SOLARIS__
+CXXSOFLAGS = -shared -fPIC 
+endif
+
+ifeq ("$(OS_NAME)", "Darwin")
+CXXFLAGS += -g -D__MAC_OSX__
+CXXSOFLAGS = -fno-common -bundle -flat_namespace -undefined suppress
+OTHERLINKFLAGS += $(READLINEDIRLIBFLAGS) 
+endif
+
+ifeq ("$(OS_NAME)", "Linux")
+CXXFLAGS += 
+CXXSOFLAGS = -g -shared -fPIC 
+OTHERLINKFLAGS += $(READLINEDIRLIBFLAGS) -lpthread -ldl -Wl,-export-dynamic -lpthread
+endif
+
+#####################################
+#     CREATE SYMBOLIC TARGETS       #
+#####################################
+
+SPLINE_TARGETS = converter.o gpl_xdr_api.o parameters.o rsm.o r_wrapper.o spline_script.o
+SPLINE_INCLUDES = 
+
+XDR_TARGETS = gpl_xdr_api.o 
+XDR_INCLUDES = gpl_xdr_api.h
+
+XDR_INCDIR_INCLUDES = $(patsubst %.h, $(XDRDIR)/%.h, $(XDR_INCLUDES))
+SPLINE_INCDIR_INCLUDES = $(patsubst %.h, $(INCDIR)/%.h, $(SPLINE_INCLUDES))
+
+# Tells make to search for sources into SRCDIR and above.
+VPATH=$(SRCDIR):$(SRCDIR)/..:$(SRCDIR)/../..
+
+
+#####################################
+#     CREATE BUILD TARGETS          #
+#####################################
+
+all: spline
+
+#############################
+#       ENGINE BUILD	    #
+#############################
+
+spline: $(SPLINE_TARGETS) $(XDR_TARGETS)
+	$(CXX) $(STATIC) $^ -o $@ $(OTHERLINKFLAGS)
+
+%.o: %.cc $(XDR_INCDIR_INCLUDES) $(SPLINE_INCDIR_INCLUDES)
+	$(CXX) -c  $< -o $@ $(CXXFLAGS) 
+
+#############################
+#       CLEAN BUILD	    #
+#############################
+
+clean:
+	rm -f *.o spline *.cc *.h *.so
+
+#############################
+#      INSTALL BUILD	    #
+#############################
+
+BINR=555
+OTHR=444
+
+install: all 
+	@mkdir -p $(IMAGE)
+	@mkdir -p $(IMAGE)/gpl
+	install -m $(BINR) $(DSTDIR)/spline $(IMAGE)/gpl
+

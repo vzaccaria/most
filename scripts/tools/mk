@@ -1,0 +1,4 @@
+make install -j 8
+make -f makefile.gpl install
+make -f makefile.rbf install
+make -f makefile.nn install
