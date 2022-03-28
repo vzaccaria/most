@@ -38,7 +38,7 @@ up to date are the .md files in the docs directory.
 
 # TODO
 
-- The first todo is to write a todo!
+- [] Add a top page for the documentation
 
 # Acknowledgements
 
