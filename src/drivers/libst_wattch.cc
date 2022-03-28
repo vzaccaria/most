@@ -7,12 +7,11 @@
  *  /_/  /_/\____//____//_/     
  * 
  * Multi-Objective System Tuner 
- * Copyright (c) 2007-2011 Politecnico di Milano
+ * Copyright (c) 2007-2022 Politecnico di Milano
  * 
  * Development leader: Vittorio Zaccaria
  * Main developers: Vittorio Zaccaria, Gianluca Palermo, Fabrizio Castro
  *  
- * This file is confidential property of Politecnico di Milano. 
  * 
  * @STSHELL_LICENSE_END@ */
 #include <iostream>
