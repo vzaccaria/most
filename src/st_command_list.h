@@ -1,18 +1,18 @@
 /* @STSHELL_LICENSE_START@
  *
- *      __  _______  ___________ 
- *     /  |/  / __ \/ ___/_  __/ 
- *    / /|_/ / / / /\__ \ / /    
- *   / /  / / /_/ /___/ // /    
- *  /_/  /_/\____//____//_/     
- * 
- * Multi-Objective System Tuner 
+ *      __  _______  ___________
+ *     /  |/  / __ \/ ___/_  __/
+ *    / /|_/ / / / /\__ \ / /
+ *   / /  / / /_/ /___/ // /
+ *  /_/  /_/\____//____//_/
+ *
+ * Multi-Objective System Tuner
  * Copyright (c) 2007-2022 Politecnico di Milano
- * 
+ *
  * Development leader: Vittorio Zaccaria
  * Main developers: Vittorio Zaccaria, Gianluca Palermo, Fabrizio Castro
- *  
- * 
+ *
+ *
  * @STSHELL_LICENSE_END@ */
 
 #include "config.h"
@@ -325,9 +325,8 @@ public:
       if (!gen_text)
         shell_command("groff -man -Tascii " + file_name + " | less", true);
       else {
-        shell_command(string("cat tmp.man | sed -f ") +
-                      __STSHELL_HARDWIRED_BUILD_PATH__ +
-                      "/scripts/mmd/mmd.sed >> " + text_name);
+        shell_command(string("cat tmp.man | sed -f ") + __STSHELL_SRC_PATH__ +
+                      "/docs/tools/cman/mmd.sed >> " + text_name);
       }
 
     } else {
@@ -353,10 +352,9 @@ public:
       } else
 #endif
       {
-        shell_command(string("cat ") + __STSHELL_HARDWIRED_BUILD_PATH__ +
-                      "/man/" + command_help + " | sed -f " +
-                      __STSHELL_HARDWIRED_BUILD_PATH__ +
-                      "/scripts/mmd/mmd.sed >> " + text_name);
+        shell_command(string("cat ") + __STSHELL_SRC_PATH__ + "/man/" +
+                      command_help + " | sed -f " + __STSHELL_SRC_PATH__ +
+                      "/docs/tools/cman/mmd.sed >> " + text_name);
       }
     }
     return true;

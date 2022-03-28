@@ -46,11 +46,12 @@ MOST is currently updated and maintained by Vittorio Zaccaria. Other
 contributors are Gianluca Palermo, Fabrizio Castro, Giovanni Mariani, Vailati
 Mattia, and Franzini Paolo.
 
-MOST is derived from System Tuning Shell and Multicube Explorer. The System
-Tuning Shell was originally designed and coded internally at Politecnico di
-Milano by Vittorio Zaccaria while Lorenzo Salvemini, Simone Valsecchi and
-Gianluca Palermo contributed to various aspects of the implementation and
-testing.
+MOST is derived from two projects: the System Tuning Shell and Multicube
+Explorer. The System Tuning Shell was originally designed and coded internally
+at Politecnico di Milano by Vittorio Zaccaria while Lorenzo Salvemini, Simone
+Valsecchi and Gianluca Palermo contributed to various aspects of the
+implementation and testing. The prefix `st_` in front of source code files is an
+heritage coming from the System Tuning Shell.
 
 Multicube Explorer was a tool developed for the Multicube project (MULTICUBE
 FP7-216693) by Politecnico di Milano and Università della Svizzera Italiana. Its
