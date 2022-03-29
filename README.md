@@ -69,6 +69,20 @@ FP7-216693) by Politecnico di Milano and Università della Svizzera Italiana. It
 authors were Vittorio Zaccaria, Gianluca Palermo, Giovanni Mariani, Fabrizio
 Castro.
 
+If you use this tool for academic research, please reference the following work:
+
+```bibtex
+@inproceedings{mdf,
+  author = {C. Silvano and W. Fornaciari and G. Palermo and V. Zaccaria and F. Castro and M. Martinez and S. Bocchio and R. Zafalon and P. Avasare and G. Vanmeerbeeck and C. Ykman-Couvreur and M. Wouters and C. Kavka and L. Onesti and A. Turco and U. Bondi and G. Mariani and H. Posadas and E. Villar and C. Wu and F. Dongrui and Z. Hao},
+  booktitle = {Multi-objective Design Space Exploration of Multiprocessor SoC Architectures, Cristina Silvano, William Fornaciari, Eugenio Villar (Eds.)},
+  isbn = {ISBN 978-1-4419-8836-2},
+  pages = {3-17},
+  publisher = {Springer Science+Businness Media},
+  title = {The MULTICUBE Design Flow},
+  year = {2011}
+}
+```
+
 # WARRANTY
 
 NO WARRANTY
