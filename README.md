@@ -31,14 +31,25 @@ make install
 #
 ```
 
-# Usage
+# Documentation
 
-Documentation is still in a flux; the only thing that is currently more or less
-up to date are the .md files in the docs directory.
+- [Introduction and overview](./docs/doc-most.md)
+
+**Interfacing**:
+
+- [Simulator interface (xml)](./docs/doc-xml.md)
+- [Simulator interface (generic driver)](./docs/doc-gend.md)
+
+**Reference manuals**:
+
+- [Language commands](./docs/doc-man-commands.md)
+- [Optimization algorithms](./docs/doc-man-opt.md)
+- [Design of experiments](./docs/doc-man-doe.md)
+- [Response Surface Modeling](./docs/doc-man-rsm.md)
 
 # TODO
 
-- [] Add a top page for the documentation
+- Use LUA as default language
 
 # Acknowledgements
 
