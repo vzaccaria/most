@@ -1,1 +1,2 @@
-CXX=clang++ cmake ..
+#CXX=clang++ cmake ..
+CXX=g++ cmake ..

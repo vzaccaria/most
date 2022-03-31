@@ -14,31 +14,16 @@ RUN apt-get install -y \
 
 WORKDIR /root
 
-RUN echo "4" 
-RUN git clone https://github.com/vzaccaria/filesdot.git
-WORKDIR /root/filesdot 
 
-RUN /usr/bin/bash ./install.sh 
-
-ENV POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD true
-
-
-WORKDIR /root
-
-RUN apt-get install -y npm clang libedit-dev libxml2-dev silversearcher-ag bison flex mpich 
-RUN npm install -g diff-so-fancy
-RUN apt-get install -y clangd
-RUN npm install coc-clangd && nvim --headless +"CocInstall -sync coc-clangd" +qall
+RUN apt-get install -y libedit-dev libxml2-dev silversearcher-ag bison flex mpich
+RUN apt-get install -y build-essential
 RUN apt-get install -y cmake
-RUN apt-get install -y libreadline-dev
-RUN apt-get install -y libgsl-dev
+RUN apt-get install -y libreadline-dev libssl-dev libgsl-dev
 
-COPY ./overrides/most /root
-RUN apt-get install -y clang-format
 
 WORKDIR /local
 
-RUN apt-get install -y python
+RUN apt-get install -y python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN apt-get install -y libxml2-utils
 
