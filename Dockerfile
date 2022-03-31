@@ -38,8 +38,8 @@ RUN apt-get install -y clang-format
 
 WORKDIR /local
 
-RUN apt-get install -y python2
-RUN ln -s /usr/bin/python2 /usr/bin/python
+RUN apt-get install -y python
+RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN apt-get install -y libxml2-utils
 
 WORKDIR /root
