@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design_space xmlns="http://www.multicube.eu/" version="1.3">
+<simulator>
+        <simulator_executable path="python /path/to/most/examples/gcc/gcc_most.py --file=linpack.c" />
+</simulator>
+<parameters>
+<parameter name="par_opt" type="string">
+    <item value="-O"/>
+    <item value="-O0"/>
+    <item value="-O1"/>
+    <item value="-O2"/>
+    <item value="-O3"/>
+    <item value="-Os"/>
+</parameter>
+<parameter name="par_dbg" type="string">
+    <item value=" "/>
+    <item value="-g"/>
+</parameter>
+</parameters>
+<system_metrics>
+        <system_metric name="compilation_time" type="float" unit="sec" desired="small" />
+        <system_metric name="execution_time" type="float" unit="sec" desired="small" />
+        <system_metric name="code_size" type="float" unit="Byte" desired="small" />
+</system_metrics>
+</design_space>
