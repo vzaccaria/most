@@ -14,6 +14,9 @@ source ../bootstrap.sh
 make
 make install
 
+# To test
+# make test
+
 # now you will find the tool installed in /opt/bin
 /opt/bin/most
 
