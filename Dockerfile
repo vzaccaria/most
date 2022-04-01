@@ -32,6 +32,7 @@ RUN npm install coc-clangd && nvim --headless +"CocInstall -sync coc-clangd" +qa
 RUN apt-get install -y cmake
 RUN apt-get install -y libreadline-dev
 RUN apt-get install -y libgsl-dev
+  
 
 COPY ./overrides/most /root
 RUN apt-get install -y clang-format
