@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_INSTALL_PREFIX "/opt" CACHE PATH "..." FORCE)
 
 find_package(LibXml2 REQUIRED)
 find_package(Readline REQUIRED)
@@ -43,6 +44,7 @@ add_subdirectory(tests/testx2)
 add_subdirectory(tests/testx3)
 add_subdirectory(tests/testx4)
 add_subdirectory(tests/testx5)
+add_subdirectory(examples/gcc)
 add_subdirectory(validation)
 add_subdirectory(schemas)
 
@@ -51,9 +53,9 @@ file(COPY examples DESTINATION .)
 
 # Installation
 
-set(CMAKE_INSTALL_PREFIX "/opt" CACHE PATH "..." FORCE)
 install(DIRECTORY packages DESTINATION .)
-install(DIRECTORY examples DESTINATION .)
+install(DIRECTORY ${PROJECT_BINARY_DIR}/examples/gcc DESTINATION examples)
+install(DIRECTORY schemas DESTINATION .)
 
 
 # if doing cmake 

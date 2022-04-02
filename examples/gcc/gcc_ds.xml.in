@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <design_space xmlns="http://www.multicube.eu/" version="1.3">
 <simulator>
-        <simulator_executable path="python /path/to/most/examples/gcc/gcc_most.py --file=linpack.c" />
+        <simulator_executable path="python3 @idir@/examples/gcc/gcc_most.py --file=linpack.c" />
 </simulator>
 <parameters>
 <parameter name="par_opt" type="string">

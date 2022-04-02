@@ -1,3 +1,11 @@
+**MOST** (Multi-Objective System Optimizer) is a tool for architectural design
+space exploration. **MOST** is an interactive program that lets the designer
+explore a design space of configurations for a particular architecture for which
+an executable model (or _driver_) exists. **MOST** can be extended by
+introducing new optimization algorithms such as Monte Carlo optimization,
+sensitivity based optimization and, as an example, Taguchi design of
+experiments. All of this by using an appropriate API.
+
 # Installation
 
 At the moment the best way to install and run MOST is through a docker container
@@ -31,6 +39,14 @@ make install
 #  Send bug reports to vittorio.zaccaria@polimi.it
 #  --
 #
+```
+
+# Example
+
+Once installed, you can run the `gcc` example shown in the docs using:
+
+```shell
+/opt/bin/most -x /opt/examples/gcc/gcc_ds.xml -f /opt/examples/gcc/gcc_full_dse.scr
 ```
 
 # Documentation
