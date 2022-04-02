@@ -21,4 +21,5 @@ jobs:
           make
     - name: Test MOST
       run: |
+          cd build
           make test
