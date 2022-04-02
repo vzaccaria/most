@@ -1,11 +1,10 @@
 # Installation
 
 At the moment the best way to install and run MOST is through a docker container
-with the provided Dockerfile:
+with the available MOST development and test Docker image:
 
 ```shell
-docker build . -t most-latest
-docker run -ti --privileged -v ${PWD}:/local most-latest
+docker run -ti -v ${PWD}:/local vzaccaria/most:latest
 
 # in the container (root@....)
 mkdir build
