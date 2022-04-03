@@ -49,6 +49,10 @@ Once installed, you can run the `gcc` example shown in the docs using:
 /opt/bin/most -x /opt/examples/gcc/gcc_ds.xml -f /opt/examples/gcc/gcc_full_dse.scr
 ```
 
+This should generate two scatter plots (`gcc_all_points.pdf` and
+`gcc_pareto_points.pdf`), one with the plot of all design points evaluated and
+on one with only the pareto points with respect to execution time and code size.
+
 # Documentation
 
 - [Introduction and overview](./docs/doc-most.md)

@@ -3,9 +3,10 @@
 # Execution_time and code size are metrics defined in the DS
 
 # Step 1. set the objectives for each design x
+# Since we are going to do a full search anyway
 
-set_objective obj_a(x) = execution_time($x)
-set_objective obj_b(x) = code_size($x)
+set_objective executionTime(x) = execution_time($x)
+set_objective codeSize(x) = code_size($x)
 
 # Step 2. Define an initial Doe and an optimizer.
 # Here, the optimizer just executes the defined Doe, nothing else
@@ -16,10 +17,13 @@ opt_load_optimizer "st_parallel_doe"
 
 # Step 3. Invoke the optimizer and write designs and metrics into FULL_DB (database)
 opt_tune FULL_DB
+db_write FULL_DB --file_name=gcc.db
 
-# Step 4. Filter out non-dominant configurations considering also the constraints
+# Step 4. Plot all points
+db_plot "FULL_DB" --xaxis="executionTime" --yaxis="codeSize" --output="gcc_all_points" --onepage=true --plevel=par_dbg
+
+# Step 5. Filter and plot only pareto points
 db_filter_pareto FULL_DB --valid=TRUE
 
-# Optionally Export of all the simulation results in a CSV file
-db_write FULL_DB --file_name=gcc.db
-db_export FULL_DB --file_name=all.csv
+db_plot "FULL_DB" --xaxis="executionTime" --yaxis="codeSize" --output="gcc_pareto_points" --onepage=true --plevel=par_opt
+
