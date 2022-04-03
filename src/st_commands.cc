@@ -1,18 +1,18 @@
 /* @STSHELL_LICENSE_START@
  *
- *      __  _______  ___________ 
- *     /  |/  / __ \/ ___/_  __/ 
- *    / /|_/ / / / /\__ \ / /    
- *   / /  / / /_/ /___/ // /    
- *  /_/  /_/\____//____//_/     
- * 
- * Multi-Objective System Tuner 
+ *      __  _______  ___________
+ *     /  |/  / __ \/ ___/_  __/
+ *    / /|_/ / / / /\__ \ / /
+ *   / /  / / /_/ /___/ // /
+ *  /_/  /_/\____//____//_/
+ *
+ * Multi-Objective System Tuner
  * Copyright (c) 2007-2022 Politecnico di Milano
- * 
+ *
  * Development leader: Vittorio Zaccaria
  * Main developers: Vittorio Zaccaria, Gianluca Palermo, Fabrizio Castro
- *  
- * 
+ *
+ *
  * @STSHELL_LICENSE_END@ */
 
 #include "config.h"
@@ -23,13 +23,13 @@
 #include <sstream>
 #include "st_commands.h"
 #include "st_common_utils.h"
-#include "st_doe_utils.h" 
+#include "st_doe_utils.h"
 #include "st_driver_utils.h"
 #include "st_env.h"
 #include "st_list.h"
 #include "st_map.h"
 #include "st_object.h"
-#include "st_opt_utils.h" 
+#include "st_opt_utils.h"
 #include "st_parser.h"
 #include "st_point.h"
 #include "st_shell_variables.h"
@@ -1523,11 +1523,11 @@ bool prs_command_plot_vector(st_map *metrics) {
 
   if (file != "") {
     if (monochrome)
-      file_out << "set terminal postscript eps monochrome" << endl;
+      file_out << "set terminal pdf monochrome" << endl;
     else
-      file_out << "set terminal postscript eps color" << endl;
+      file_out << "set terminal pdf color" << endl;
 
-    file_out << "set output \"" << file << ".ps\"" << endl;
+    file_out << "set output \"" << file << ".pdf\"" << endl;
   }
 
   if (override != "") {
@@ -1942,11 +1942,11 @@ bool prs_command_plot(st_map *metrics) {
   bool dummy = false;
   if (file != "") {
     if (!monochrome) {
-      file_out << "set terminal postscript eps color" << endl;
+      file_out << "set terminal pdf color" << endl;
     } else {
-      file_out << "set terminal postscript eps monochrome" << endl;
+      file_out << "set terminal pdf monochrome" << endl;
     }
-    file_out << "set output \"" << file << ".ps\"" << endl;
+    file_out << "set output \"" << file << ".pdf\"" << endl;
   }
   file_out << "set key " << key << endl;
   if (iz != "") {
