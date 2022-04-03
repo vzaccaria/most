@@ -1,5 +1,5 @@
 # Read a db and write it back to see if something is broken in the circle. 
-db_read "tst.db" --destination="root"
+db_read "test8.db.ref" --destination="root"
 db_write "root" --file_name="out.db"
 
 

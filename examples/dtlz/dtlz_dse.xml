@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design_space xmlns="http://www.multicube.eu/" version="1.3">
+    <simulator>
+        <simulator_executable path="python /path/to/most/examples/dtlz/dtlz.py" />
+    </simulator>
+    <parameters>
+	<parameter name="x1" type="integer" min="0" max="10" step="1" />
+	<parameter name="x2" type="integer" min="0" max="10" step="1" />
+	<parameter name="x3" type="integer" min="0" max="10" step="1" />
+    </parameters>
+    <system_metrics>
+	<system_metric name="f1" type="float" unit="" desired="small" />
+	<system_metric name="f2" type="float" unit="" desired="small" />
+	<system_metric name="f3" type="float" unit="" desired="small" />
+    </system_metrics>
+</design_space>

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -e
+test_name=
+use_package=
+test_db=
+mpi=
+xml=
+copy_ref_rb=
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -t | --test_name)
+            shift
+            test_name=$1
+        ;;
+        -p | --use_package)
+            use_package="-p" 
+        ;;
+        -x | --xml)
+            xml="-x @bdir@/tests/$test_name/multicube_design_space_test.xml" 
+        ;;
+        -m | --mpi)
+            mpi="mpirun -np 8 " 
+        ;;
+        -d | --test_db)
+            shift
+            test_db=$1
+        ;;
+        -c | --copy_ref_db)
+            copy_ref_db=$1
+        ;;
+    esac
+    shift
+done
+
+if [ ! -z $copy_ref_db ]
+then
+        cp @sdir@/tests/$test_name/test_db.ref $test_name.db.ref
+fi
+
+$mpi @bdir@/bin/most -S $xml -f @sdir@/tests/$test_name/test.scr $use_package > $test_name.tmp
+diff $test_name.tmp @sdir@/tests/$test_name/test_output.ref
+
+if [ ! -z $test_db ]
+then
+        diff $test_db  @sdir@/tests/$test_name/test_db.ref
+fi
+
