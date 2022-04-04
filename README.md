@@ -52,6 +52,9 @@ Once installed, you can run the `gcc` example shown in the docs using:
 This should generate two scatter plots (`gcc_all_points.pdf` and
 `gcc_pareto_points.pdf`), one with the plot of all design points evaluated and
 on one with only the pareto points with respect to execution time and code size.
+For example, `gcc_all_points.pdf` should look like this:
+
+![](./docs/figures/gcc_all_points.png)
 
 # Documentation
 
