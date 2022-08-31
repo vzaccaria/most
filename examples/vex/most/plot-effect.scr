@@ -1,0 +1,43 @@
+# This is an automatically generated log of the previous interactive session of MOST
+
+set db_report_metric_col_size = 14 
+db_read "databases/FULL.db" --destination="root"
+
+set random_doe_solutions_number = 200
+set par = "lg2LineSize" 
+set random_doe_effect = $par
+
+doe_load_doe "st_random_effect"
+opt_load_optimizer "st_parallel_doe"
+
+opt_tune "D"
+ 
+set scenarios = 3
+# number of metrics per point
+#
+set nom = 9 
+
+#set min = 0
+#set limit = $scenarios-1
+
+set mini = 0
+set limit = 2
+
+set clusters = 6
+
+set_function ops_a(configuration, app)   = metrics($configuration)@($nom*$app)
+set_function tdta_a(configuration, app)  = metrics($configuration)@($nom*$app+2)
+set_function ebw_a(configuration, app)   = metrics($configuration)@($nom*$app+3)
+set_function ints_a(configuration, app)  = metrics($configuration)@($nom*$app+5)
+
+
+set_objective intensity(x) = avg(i, $mini, $limit,     ints_a($x, $i))
+set_objective perf(x)      = geomavg(i, $mini, $limit, ops_a($x, $i))
+set_objective data(x)      = avg(i, $mini, $limit,     tdta_a($x, $i))
+set_objective band(x)      = avg(i, $mini, $limit,     ebw_a($x, $i))
+
+db_report "D" --only_objectives=true
+
+db_plot "D" --xaxis=intensity --yaxis=perf --output="effect" --onepage=true --monochrome=true --override="gnuplot/override.scr" --effect=$par
+
+quit

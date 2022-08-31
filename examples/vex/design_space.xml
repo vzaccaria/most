@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design_space xmlns="http://www.multicube.eu/" version="1.3">
+	<simulator>
+                <simulator_executable path="never invoked" />
+	</simulator>
+	<parameters>
+		<parameter name="lg2CacheSize" description="Vex cache size" type="integer" min="11" max="30"/>
+		<parameter name="lg2Sets" description="Vex associativity" type="integer" min="0" max="3"/>
+		<parameter name="lg2LineSize" description="Vex line size" type="integer" min="5" max="7"/>
+        </parameters>
+
+	<system_metrics repeat="3">
+		<system_metric name="ops" 	type="float" unit="Mops/s" />	
+		<system_metric name="tiopss" 	type="float" unit="Mops/s" />	
+		<system_metric name="tdta" 	type="float" unit="B"      />  
+		<system_metric name="ebw" 	type="float" unit="MB/s"   />  
+		<system_metric name="bw" 	type="float" unit="MB/s"   />  
+		<system_metric name="ints" 	type="float" unit="ops/B"  />  
+		<system_metric name="rdg" 	type="float" unit="ops/B"  />  
+		<system_metric name="tim" 	type="float" unit="s"      />  
+		<system_metric name="stim" 	type="float" unit="s"      />  
+	</system_metrics>
+</design_space>

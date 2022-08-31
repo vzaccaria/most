@@ -1,0 +1,42 @@
+# This is an automatically generated log of the previous interactive session of MOST
+
+set_procedure cat_point(x)
+	echo perf($x) + " " + intensity($x) >> "data.out"
+done
+
+set db_report_metric_col_size = 14 
+db_read "databases/FULL.db" --destination="D"
+
+
+set scenarios = 3
+# number of metrics per point
+#
+set nom = 9 
+
+#set min = 0
+#set limit = $scenarios-1
+
+set mini = 0
+set limit = 2
+
+set clusters = 6
+
+set_function ops_a(configuration, app)   = metrics($configuration)@($nom*$app)
+set_function tdta_a(configuration, app)  = metrics($configuration)@($nom*$app+2)
+set_function ebw_a(configuration, app)   = metrics($configuration)@($nom*$app+3)
+set_function ints_a(configuration, app)  = metrics($configuration)@($nom*$app+5)
+
+set_objective perf(x)      = geomavg(i, $mini, $limit, ops_a($x, $i))
+set_objective data(x)      = avg(i, $mini, $limit,     tdta_a($x, $i))
+set_objective band(x)      = avg(i, $mini, $limit,     ebw_a($x, $i))
+set_objective intensity(x) = avg(i, $mini, $limit,     ints_a($x, $i))
+
+db_filter_valid "D"
+
+db_report "D" --only_objectives=true
+
+db_plot "D" --xaxis=intensity --yaxis=perf --output="intensityS" --plevel="lg2Sets" --onepage=true --monochrome=false --override="gnuplot/override.scr"
+db_plot "D" --xaxis=intensity --yaxis=perf --output="intensityCB" --plevel="lg2LineSize" --onepage=true --monochrome=false --override="gnuplot/override.scr"
+db_plot "D" --xaxis=intensity --yaxis=perf --output="intensityCS" --plevel="lg2CacheSize" --onepage=true --monochrome=false --override="gnuplot/override.scr"
+
+quit

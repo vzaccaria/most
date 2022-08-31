@@ -1,0 +1,48 @@
+#
+set terminal pdf size 20,10;
+
+set xlabel "Intensity [ops/B]"
+set ylabel "Performance [Mops/s]" # +0.7
+set title "Vex simulator - intensity vs performance"
+set logscale x 2
+set logscale y 2
+set size 1,1
+
+set style line 11 lc rgb '#808080' lt 1
+set border 3 back ls 11
+set tics nomirror
+
+set style line 12 lc rgb '#808080' lt 0 lw 1
+set grid back ls 12
+
+set arrow from graph 1,0 to graph 1.01,0 size screen 0.025,15,60 \
+    filled ls 11
+set arrow from graph 0,1 to graph 0,1.01 size screen 0.025,15,60 \
+    filled ls 11
+
+set style line 1 lc rgb '#000090'
+set style line 2 lc rgb '#000fff'
+set style line 3 lc rgb '#0090ff'
+set style line 4 lc rgb '#0fffee'
+set style line 5 lc rgb '#90ff70'
+set style line 6 lc rgb '#ffee00'
+set style line 7 lc rgb '#ff7000'
+set style line 8 lc rgb '#ee0000'
+set style line 9 lc rgb '#7f0000'
+
+# The following are theorethical.
+bw  = 1200 # MB/s
+gf  = 1200   # Mops/s = 4ops * 300MHz
+
+rp = gf/bw 
+
+lx=0.125 # Lowest intensity plotted in log2
+ux=256   # Highest intensity plotted in log2
+ly=100   # Lowest perf plotted in log2
+uy=2000  # Highest perf plotted in log2
+
+set xrange [lx:ux]
+set yrange [ly:uy]
+
+set arrow from lx,bw*lx to rp,bw*rp nohead 
+set arrow from rp,gf to ux,gf  nohead 
