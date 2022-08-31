@@ -1,7 +1,13 @@
 
 
+run-plot-effect: 
+	/opt/bin/most -x design_space.xml -f most/plot-effect.scr -p
+	cp g-intensity-perf-lg2CacheSize.pdf g-intensity-perf-lg2LineSize.pdf g-intensity-perf-lg2Sets.pdf generated
+
 run-%:
 	/opt/bin/most -x design_space.xml -f most/$*.scr -p
+
+
 
 clean:
 	rm -f check normal_* rand_* st_shell_*.scr *.pdf *.png D-* tmp-*

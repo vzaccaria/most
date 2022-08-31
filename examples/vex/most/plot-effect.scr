@@ -39,5 +39,6 @@ set_objective band(x)      = avg(i, $mini, $limit,     ebw_a($x, $i))
 db_report "D" --only_objectives=true
 
 db_plot "D" --xaxis=intensity --yaxis=perf --output="effect" --onepage=true --monochrome=true --override="gnuplot/override.scr" --effect=$par
+report_effect(500,"gnuplot/override.scr")
 
 quit
